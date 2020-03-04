@@ -212,3 +212,6 @@ nbdist/
 .history
 
 # End of https://www.gitignore.io/api/java,bluej,eclipse,netbeans,intellij+all,visualstudiocode
+
+### Ignoring of .env files that might contain sensitive data ###
+.env
