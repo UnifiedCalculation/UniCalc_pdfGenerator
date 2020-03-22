@@ -22,14 +22,14 @@ public class PDFController {
         this.pdfService = pdfService;
     }
 
-    @RequestMapping(value = "/toPDF", method = RequestMethod.GET)
-    public ResponseEntity<byte[]> generatePDF() {
+    @RequestMapping(value = "/toPDF", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> generatePDF(@RequestBody OfferRequest offerRequest) {
 
-        byte[] pdf = pdfService.generatePDF(null);
+        byte[] pdf = pdfService.generatePDF(offerRequest);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
-        String filename = "test.pdf";
+        String filename = offerRequest.getTitle() + ".pdf";
         headers.setContentDispositionFormData(filename, filename);
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         ResponseEntity<byte[]> response = new ResponseEntity<>(pdf, headers, HttpStatus.OK);

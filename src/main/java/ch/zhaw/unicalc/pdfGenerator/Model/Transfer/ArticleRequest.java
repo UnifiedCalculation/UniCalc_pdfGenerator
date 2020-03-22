@@ -13,6 +13,6 @@ public class ArticleRequest {
     private String unit;
     private Integer amount;
     private Integer discount;
-    private Integer price;
+    private Double price;
     private String description;
 }
