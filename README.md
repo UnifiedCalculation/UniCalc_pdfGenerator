@@ -1,2 +1,2 @@
 # UniCalc_pdfGenerator
-Repository for the Java microservice that generates a pdf out of raw JSON data
+accepts a GET-Request to localhost:8080/toPDF and returns a PDF with a text "TEST"
