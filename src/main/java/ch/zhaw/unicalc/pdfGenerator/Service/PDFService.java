@@ -2,10 +2,14 @@ package ch.zhaw.unicalc.pdfGenerator.Service;
 
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
 import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,8 @@ import java.io.InputStream;
 public class PDFService {
 
     private String path = "target/temp/";
+    private String[] header = {"Nr.", "Name", "Artikel Nr.", "Stückzahl", "Preis", "Rabatt", "Total"};
+    private float[] width = {1, 5, 3, 3, 3, 3, 3};
 
     @Autowired
     public PDFService() {
@@ -35,7 +41,9 @@ public class PDFService {
 
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(sourcePath));
             Document doc = new Document(pdfDocument);
-            Table table = new Table(UnitValue.createPercentArray(7)).useAllAvailableWidth();
+            Table table = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
+            createHeader(table);
+
 
             for (int i = 0; i < 7; i++) {
                 table.addCell(Integer.toString(i));
@@ -69,5 +77,17 @@ public class PDFService {
             byteArrayOutputStream.write(buffer, 0, bytesRead);
         }
         return byteArrayOutputStream.toByteArray();
+    }
+
+    private void createHeader(Table table) {
+        for(int i = 1; i < 8; i++) {
+            Cell cell = new Cell(1,1)
+                    .add(new Paragraph(header[i-1]))
+                    .setWidth(width[i-1])
+                    .setFontSize(12)
+                    .setBackgroundColor(DeviceGray.GRAY)
+                    .setTextAlignment(TextAlignment.LEFT);
+            table.addCell(cell);
+        }
     }
 }
