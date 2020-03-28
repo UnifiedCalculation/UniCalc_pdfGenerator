@@ -1,7 +1,7 @@
 package ch.zhaw.unicalc.pdfGenerator.Controller;
 
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
-import ch.zhaw.unicalc.pdfGenerator.Service.PDFService;
+import ch.zhaw.unicalc.pdfGenerator.Service.OfferPdf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,17 +15,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PDFController {
 
-    private PDFService pdfService;
+    private OfferPdf offerPdf;
+    private static final String pdfGenerator = "/toPdf";
 
     @Autowired
-    public PDFController(PDFService pdfService) {
-        this.pdfService = pdfService;
+    public PDFController(OfferPdf offerPdf) {
+        this.offerPdf = offerPdf;
     }
 
-    @RequestMapping(value = "/toPDF", method = RequestMethod.POST)
-    public ResponseEntity<byte[]> generatePDF(@RequestBody OfferRequest offerRequest) {
 
-        byte[] pdf = pdfService.generatePDF(offerRequest);
+    /**
+     * Generates a PDF for the Invoice and returns it.
+     *
+     * @param offerRequest The Invoice-JSON
+     * @return The Invoice PDF in byte[]
+     */
+    @RequestMapping(value = pdfGenerator+"/invoice", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> generateInvoice(@RequestBody OfferRequest offerRequest) {
+
+        byte[] pdf = offerPdf.generatePDF(offerRequest);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_PDF);
@@ -34,6 +42,28 @@ public class PDFController {
         headers.setCacheControl("must-revalidate, post-check=0, pre-check=0");
         ResponseEntity<byte[]> response = new ResponseEntity<>(pdf, headers, HttpStatus.OK);
         return response;
+    }
+
+    /**
+     * Generates a PDF for the given MaterialList-JSON and returns it as a byte-Array
+     *
+     * @param obj
+     * @return The MaterialList in byte[]
+     */
+    @RequestMapping(value = pdfGenerator+"/materialList", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> generateMaterialList(@RequestBody Object obj) {
+        return null;
+    }
+
+    /**
+     * Generates a PDF for the Offer and returns it as a byte-Array;
+     *
+     * @param obj
+     * @return The Offer PDF in byte[]
+     */
+    @RequestMapping(value = pdfGenerator+"/offer", method = RequestMethod.POST)
+    public ResponseEntity<byte[]> generateOffer(@RequestBody Object obj) {
+        return null;
     }
 
 }
