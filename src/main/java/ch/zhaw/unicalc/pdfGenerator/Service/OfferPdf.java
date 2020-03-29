@@ -2,7 +2,7 @@ package ch.zhaw.unicalc.pdfGenerator.Service;
 
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.ArticleRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
-import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.SegmentRequest;
+import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.EntryRequest;
 import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -15,7 +15,6 @@ import com.itextpdf.layout.property.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -29,10 +28,12 @@ public class OfferPdf {
     private String path = "target/temp/";
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
     private float[] width = {5, 2, 2, 3, 2, 3};
+    private GeneralPdf generalPdf;
 
 
     @Autowired
-    public OfferPdf() {
+    public OfferPdf(GeneralPdf generalPdf) {
+        this.generalPdf = generalPdf;
     }
 
     public byte[] generatePDF(OfferRequest offerRequest) {
@@ -59,7 +60,7 @@ public class OfferPdf {
 
 
             InputStream inputStream = new FileInputStream(sourcePath);
-            byte[] bytes = convertPdfToByte(inputStream);
+            byte[] bytes = this.generalPdf.convertPdfToByte(inputStream);
             inputStream.close();
 
             file.delete();
@@ -98,7 +99,7 @@ public class OfferPdf {
     private Map<Integer, Double> createContent(Table table, OfferRequest offerRequest) {
         int i = 1;
         double finalPrice = 0.0;
-        for (SegmentRequest segment : offerRequest.getSegments()) {
+        for (EntryRequest segment : offerRequest.getEntries()) {
             Cell cell1 = new Cell(1, 1)
                     .add(new Paragraph(Integer.toString((int) i)))
                     .setFontSize(12)
@@ -231,17 +232,6 @@ public class OfferPdf {
             table.addCell(cell12);
         });
 
-    }
-
-    private byte[] convertPdfToByte(InputStream stream) throws IOException {
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        byte[] buffer = new byte[8192];
-
-        int bytesRead;
-        while ((bytesRead = stream.read(buffer)) != -1) {
-            byteArrayOutputStream.write(buffer, 0, bytesRead);
-        }
-        return byteArrayOutputStream.toByteArray();
     }
 
 }

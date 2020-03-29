@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class InvoicePdf {
 
-    @Autowired
-    public InvoicePdf() {
+    private GeneralPdf generalPdf;
 
+    @Autowired
+    public InvoicePdf(GeneralPdf generalPdf) {
+        this.generalPdf = generalPdf;
     }
 }

@@ -11,7 +11,8 @@ import java.util.Set;
 @Builder
 public class OfferRequest {
     private String title;
-    private Integer id;
-    private String marketBranch;
-    private Set<SegmentRequest> segments;
+    private Integer discount;
+    private Set<EntryRequest> entries;
+    private CompaniesRequest business;
+    private ProjectRequest projectInformation;
 }
