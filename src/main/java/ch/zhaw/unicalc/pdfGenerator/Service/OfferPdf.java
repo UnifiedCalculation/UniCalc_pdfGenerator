@@ -47,7 +47,7 @@ public class OfferPdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(sourcePath));
 
             Document doc = new Document(pdfDocument);
-
+            generalPdf.createHeader(doc, offerRequest.getBusiness());
             Table table = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
 
             createHeader(table);
@@ -80,7 +80,7 @@ public class OfferPdf {
      * @param table
      */
     private void createHeader(Table table) {
-        for (int i = 1; i < 8; i++) {
+        for (int i = 1; i < 6; i++) {
             Cell cell = new Cell(1, 1)
                     .add(new Paragraph(header[i - 1]))
                     .setWidth(width[i - 1])
