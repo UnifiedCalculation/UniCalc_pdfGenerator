@@ -6,7 +6,10 @@ import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.EntryRequest;
 import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
@@ -15,10 +18,13 @@ import com.itextpdf.layout.property.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +33,7 @@ public class OfferPdf {
 
     private String path = "target/temp/";
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
-    private float[] width = {5, 2, 2, 3, 2, 3};
+    private float[] width = {7, 2, 2, 3, 2, 2};
     private GeneralPdf generalPdf;
 
 
@@ -48,13 +54,19 @@ public class OfferPdf {
 
             Document doc = new Document(pdfDocument);
             generalPdf.createHeader(doc, offerRequest.getBusiness());
+
+            Table title = new Table(UnitValue.createPercentArray(new float[]{3, 2})).useAllAvailableWidth();
+            Table tableHeader = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
             Table table = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
 
-            createHeader(table);
-            Map totalMap = createContent(table, offerRequest);
-            createTotal(table, totalMap);
+            createTitle(title, offerRequest);
+            title.setPaddingBottom(0);
+            createHeader(tableHeader);
+            double total = createContent(table, offerRequest);
+            createTotal(table, total);
 
-
+            doc.add(title);
+            doc.add(tableHeader);
             doc.add(table);
             doc.close();
 
@@ -73,6 +85,38 @@ public class OfferPdf {
         return null;
     }
 
+    private void createTitle(Table title, OfferRequest offerRequest) {
+        Cell titleName = new Cell(1, 1)
+                .add(new Paragraph("Angebot " + offerRequest.getTitle()))
+                .setFontSize(10)
+                .setBold()
+                .setWidth(3)
+                .setBorder(null)
+                .setPaddingBottom(0)
+                .setMarginBottom(0)
+                .setTextAlignment(TextAlignment.LEFT);
+        title.addCell(titleName);
+        Cell date = new Cell(1, 1)
+                .add(new Paragraph(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))))
+                .setFontSize(10)
+                .setWidth(2)
+                .setBorder(null)
+                .setTextAlignment(TextAlignment.LEFT);
+        title.addCell(date);
+        Cell subTitle = new Cell(1,1)
+                .add(new Paragraph("???"))
+                .setFontSize(9)
+                .setBold()
+                .setWidth(3)
+                .setBorder(null)
+                .setPaddingTop(0)
+                .setMarginTop(0)
+                .setTextAlignment(TextAlignment.LEFT);
+        title.addCell(subTitle);
+        title.setPaddingBottom(0);
+        title.setMarginBottom(8);
+    }
+
 
     /**
      * Creates Header for the Table
@@ -80,13 +124,18 @@ public class OfferPdf {
      * @param table
      */
     private void createHeader(Table table) {
-        for (int i = 1; i < 6; i++) {
+        for (int i = 1; i < 7; i++) {
             Cell cell = new Cell(1, 1)
                     .add(new Paragraph(header[i - 1]))
                     .setWidth(width[i - 1])
-                    .setFontSize(12)
-                    .setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY))
-                    .setTextAlignment(TextAlignment.LEFT);
+                    .setFontSize(10)
+                    .setBorderTop(Border.NO_BORDER)
+                    .setBorderRight(Border.NO_BORDER)
+                    .setBorderLeft(Border.NO_BORDER)
+                    .setBold();
+            if(i >= 4) {
+                cell.setTextAlignment(TextAlignment.RIGHT);
+            }
             table.addCell(cell);
         }
     }
@@ -96,37 +145,38 @@ public class OfferPdf {
      *
      * @param table
      */
-    private Map<Integer, Double> createContent(Table table, OfferRequest offerRequest) {
-        int i = 1;
+    private Double createContent(Table table, OfferRequest offerRequest) {
         double finalPrice = 0.0;
         for (EntryRequest segment : offerRequest.getEntries()) {
-            Cell cell1 = new Cell(1, 1)
-                    .add(new Paragraph(Integer.toString((int) i)))
-                    .setFontSize(12)
-                    .setBackgroundColor(DeviceGray.GRAY)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell1);
-            Cell cell2 = new Cell(1, 6)
+            Cell segmentTitleCell = new Cell(1, 6)
                     .add(new Paragraph(segment.getTitle()))
-                    .setFontSize(12)
-                    .setBackgroundColor(DeviceGray.GRAY)
+                    .setFontSize(9)
+                    .setBold()
+                    .setBorder(null)
+                    .setPaddings(1, 0, 0, 0)
+                    .setMargins(1,0,0,0)
                     .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell2);
-            boolean even = false;
-            double j = 0.1;
+            table.addCell(segmentTitleCell);
 
             for (ArticleRequest article : segment.getArticles()) {
-                Cell nr = new Cell().add(new Paragraph(j + i + "")).setFontSize(11);
-                Cell name = new Cell().add(new Paragraph(article.getName())).setFontSize(11);
-                Cell articleNr = new Cell().add(new Paragraph("")).setFontSize(11);
+                Cell articleNr = new Cell(1, 6).add(new Paragraph("" + article.getNumber())).setPadding(0).setMargin(0).setFontSize(9).setBorder(null).setBold();
+
+                Cell name = new Cell().add(new Paragraph(article.getName())).setBorder(null).setPaddings(0, 0, 2, 0)
+                        .setMargins(0,0,2,0).setFontSize(9);
                 Cell amount;
-                if (article.getUnit().equals("m")) {
-                    amount = new Cell().add(new Paragraph("" + article.getAmount())).setFontSize(11);
+                if (!article.getUnit().equals("Stunden")) {
+                    amount = new Cell().add(new Paragraph("" + article.getAmount())).setBorder(null).setPaddings(0, 0, 2, 0)
+                            .setMargins(0,0,2,0).setFontSize(9);
                 } else {
-                    amount = new Cell().add(new Paragraph(article.getAmount() + "h")).setFontSize(11);
+                    amount = new Cell().add(new Paragraph(article.getAmount() + "h")).setBorder(null).setPaddings(0, 0, 2, 0)
+                            .setMargins(0,0,2,0).setFontSize(9);
                 }
-                Cell price = new Cell().add(new Paragraph(article.getPrice() + ".-")).setFontSize(11);
-                Cell discount = new Cell().add(new Paragraph(article.getDiscount() + "%")).setFontSize(11);
+                Cell unitType = new Cell().add(new Paragraph(article.getUnit())).setBorder(null).setPaddings(0, 0, 2, 0)
+                        .setMargins(0,0,2,0).setFontSize(9);
+                Cell price = new Cell().add(new Paragraph(article.getPrice() + ".-")).setPaddings(0, 0, 2, 0)
+                        .setMargins(0,0,2,0).setFontSize(9).setBorder(null).setTextAlignment(TextAlignment.RIGHT);
+                Cell discount = new Cell().add(new Paragraph(article.getDiscount() + "%")).setPaddings(0, 0, 2, 0)
+                        .setMargins(0,0,2,0).setFontSize(9).setBorder(null).setTextAlignment(TextAlignment.RIGHT);
                 double totald = article.getPrice() * article.getAmount();
                 if (article.getDiscount() != 0) {
                     double dis = totald * article.getDiscount() / 100.0;
@@ -134,56 +184,35 @@ public class OfferPdf {
                 }
                 totald = Math.floor(totald * 100) / 100;
                 finalPrice += totald;
-                Cell total = new Cell().add(new Paragraph(totald + ".-")).setFontSize(11);
+                Cell total = new Cell().add(new Paragraph(totald + ".-")).setPaddings(0, 0, 2, 0)
+                        .setMargins(0,0,2,0).setFontSize(9).setBorder(null).setTextAlignment(TextAlignment.RIGHT);
 
-                if (even) {
-                    nr.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                    name.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                    articleNr.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                    amount.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                    price.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                    discount.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                    total.setBackgroundColor(DeviceGray.makeLighter(DeviceGray.GRAY));
-                }
 
-                table.addCell(nr);
-                table.addCell(name);
                 table.addCell(articleNr);
+                table.addCell(name);
                 table.addCell(amount);
+                table.addCell(unitType);
                 table.addCell(price);
                 table.addCell(discount);
                 table.addCell(total);
-                even = !even;
-                j = j + 0.1;
             }
-
-            i++;
+            Cell space = new Cell(1,6)
+                    .add(new Paragraph(""))
+                    .setFontSize(11)
+                    .setBorder(null);
+            table.addCell(space);
         }
-        Map<Integer, Double> map = new HashMap<>();
-        map.put(i, finalPrice);
-        return map;
+        return finalPrice;
 
     }
 
-    private void createTotal(Table table, Map<Integer, Double> totalMap) {
-        totalMap.forEach((k, v) -> {
-            Cell cell1 = new Cell(1, 1)
-                    .add(new Paragraph(k + ""))
-                    .setFontSize(12)
-                    .setBackgroundColor(DeviceGray.GRAY)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell1);
+    private void createTotal(Table table, double total) {
+
             Cell cell2 = new Cell(1, 6)
                     .add(new Paragraph("Total"))
                     .setFontSize(12)
-                    .setBackgroundColor(DeviceGray.GRAY)
                     .setTextAlignment(TextAlignment.LEFT);
             table.addCell(cell2);
-            Cell cell3 = new Cell(1, 1)
-                    .add(new Paragraph(0.1 + k + ""))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell3);
             Cell cell4 = new Cell(1, 4)
                     .add(new Paragraph("Total Brutto"))
                     .setFontSize(11)
@@ -195,25 +224,15 @@ public class OfferPdf {
                     .setTextAlignment(TextAlignment.LEFT);
             table.addCell(cell5);
             Cell cell6 = new Cell(1, 1)
-                    .add(new Paragraph(Math.floor(v * 100) / 100 + ".-"))
+                    .add(new Paragraph(Math.floor(total * 100) / 100 + ".-"))
                     .setFontSize(11)
                     .setTextAlignment(TextAlignment.LEFT);
             table.addCell(cell6);
-            Cell cell7 = new Cell(1, 1)
-                    .add(new Paragraph(0.2 + k + ""))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell7);
             Cell cell8 = new Cell(1, 6)
                     .add(new Paragraph("Zusatzrabatt bei Abholung"))
                     .setFontSize(11)
                     .setTextAlignment(TextAlignment.LEFT);
             table.addCell(cell8);
-            Cell cell9 = new Cell(1, 1)
-                    .add(new Paragraph(0.3 + k + ""))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell9);
             Cell cell10 = new Cell(1, 4)
                     .add(new Paragraph("MwST."))
                     .setFontSize(11)
@@ -230,7 +249,6 @@ public class OfferPdf {
                     .setFontSize(11)
                     .setTextAlignment(TextAlignment.LEFT);
             table.addCell(cell12);
-        });
 
     }
 

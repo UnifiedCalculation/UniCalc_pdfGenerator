@@ -35,7 +35,7 @@ public class GeneralPdf {
      * @param business The BusinessRequest with all needed Information
      */
     public void createHeader(Document doc, CompaniesRequest business) {
-        float[] widths = {2, 1};
+        float[] widths = {6, 3};
         Table table = new Table(UnitValue.createPercentArray(widths)).useAllAvailableWidth();
         Cell headerLeft = new Cell(1, 1)
                 .add(new Paragraph(business.getName() + "\n" + business.getUrl()))
