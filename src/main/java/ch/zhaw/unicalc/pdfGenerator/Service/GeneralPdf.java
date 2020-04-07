@@ -2,9 +2,10 @@ package ch.zhaw.unicalc.pdfGenerator.Service;
 
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.CompaniesRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.ProjectRequest;
-import com.itextpdf.io.font.constants.StandardFontFamilies;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 
 /**
  * Pdf Class to generate general Information that every Document needs. (example Header, footer, etc)
@@ -44,15 +46,18 @@ public class GeneralPdf {
                 .setBorder(null)
                 .setTextAlignment(TextAlignment.LEFT);
         table.addCell(headerLeft);
+        try {
+            Image image = new Image(ImageDataFactory.create(business.getLogo())).setMaxHeight(30).setPadding(0);
+            Cell headerLogo = new Cell(1, 1)
+                    .add(new Paragraph().add(image))
+                    .setWidth(widths[1])
+                    .setFontSize(9)
+                    .setTextAlignment(TextAlignment.RIGHT)
+                    .setBorder(null);
+            table.addCell(headerLogo);
+        } catch (MalformedURLException e) {
 
-        Cell headerLogo = new Cell(1, 1)
-                .add(new Paragraph("Logo"))
-                .setWidth(widths[1])
-                .setFontSize(9)
-                .setBorder(null)
-                .setTextAlignment(TextAlignment.LEFT);
-        table.addCell(headerLogo);
-
+        }
         table.setMarginBottom(70);
         doc.add(table);
     }

@@ -3,11 +3,8 @@ package ch.zhaw.unicalc.pdfGenerator.Service;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.ArticleRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.EntryRequest;
-import com.itextpdf.kernel.colors.DeviceGray;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Cell;
@@ -18,22 +15,19 @@ import com.itextpdf.layout.property.UnitValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 @Service
 public class OfferPdf {
 
     private String path = "target/temp/";
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
-    private float[] width = {7, 2, 2, 3, 2, 2};
+    private float[] width = {7, 2, 2, 3, 2, 3};
     private GeneralPdf generalPdf;
 
 
@@ -63,7 +57,7 @@ public class OfferPdf {
             title.setPaddingBottom(0);
             createHeader(tableHeader);
             double total = createContent(table, offerRequest);
-            createTotal(table, total);
+            createTotal(table, total, offerRequest);
 
             doc.add(title);
             doc.add(tableHeader);
@@ -90,7 +84,7 @@ public class OfferPdf {
                 .add(new Paragraph("Angebot " + offerRequest.getTitle()))
                 .setFontSize(10)
                 .setBold()
-                .setWidth(3)
+                .setWidth(8)
                 .setBorder(null)
                 .setPaddingBottom(0)
                 .setMarginBottom(0)
@@ -103,11 +97,11 @@ public class OfferPdf {
                 .setBorder(null)
                 .setTextAlignment(TextAlignment.LEFT);
         title.addCell(date);
-        Cell subTitle = new Cell(1,1)
+        Cell subTitle = new Cell(1, 1)
                 .add(new Paragraph("???"))
                 .setFontSize(9)
                 .setBold()
-                .setWidth(3)
+                .setWidth(8)
                 .setBorder(null)
                 .setPaddingTop(0)
                 .setMarginTop(0)
@@ -133,7 +127,7 @@ public class OfferPdf {
                     .setBorderRight(Border.NO_BORDER)
                     .setBorderLeft(Border.NO_BORDER)
                     .setBold();
-            if(i >= 4) {
+            if (i == 2 || i >= 4) {
                 cell.setTextAlignment(TextAlignment.RIGHT);
             }
             table.addCell(cell);
@@ -154,29 +148,23 @@ public class OfferPdf {
                     .setBold()
                     .setBorder(null)
                     .setPaddings(1, 0, 0, 0)
-                    .setMargins(1,0,0,0)
+                    .setMargin(0)
                     .setTextAlignment(TextAlignment.LEFT);
             table.addCell(segmentTitleCell);
 
             for (ArticleRequest article : segment.getArticles()) {
-                Cell articleNr = new Cell(1, 6).add(new Paragraph("" + article.getNumber())).setPadding(0).setMargin(0).setFontSize(9).setBorder(null).setBold();
+                Cell articleNr = new Cell(1, 6).add(new Paragraph("" + article.getNumber())).setMargin(0).setPadding(0).setFontSize(8).setTextAlignment(TextAlignment.LEFT).setBorder(null).setBold();
 
-                Cell name = new Cell().add(new Paragraph(article.getName())).setBorder(null).setPaddings(0, 0, 2, 0)
-                        .setMargins(0,0,2,0).setFontSize(9);
-                Cell amount;
-                if (!article.getUnit().equals("Stunden")) {
-                    amount = new Cell().add(new Paragraph("" + article.getAmount())).setBorder(null).setPaddings(0, 0, 2, 0)
-                            .setMargins(0,0,2,0).setFontSize(9);
-                } else {
-                    amount = new Cell().add(new Paragraph(article.getAmount() + "h")).setBorder(null).setPaddings(0, 0, 2, 0)
-                            .setMargins(0,0,2,0).setFontSize(9);
-                }
-                Cell unitType = new Cell().add(new Paragraph(article.getUnit())).setBorder(null).setPaddings(0, 0, 2, 0)
-                        .setMargins(0,0,2,0).setFontSize(9);
-                Cell price = new Cell().add(new Paragraph(article.getPrice() + ".-")).setPaddings(0, 0, 2, 0)
-                        .setMargins(0,0,2,0).setFontSize(9).setBorder(null).setTextAlignment(TextAlignment.RIGHT);
-                Cell discount = new Cell().add(new Paragraph(article.getDiscount() + "%")).setPaddings(0, 0, 2, 0)
-                        .setMargins(0,0,2,0).setFontSize(9).setBorder(null).setTextAlignment(TextAlignment.RIGHT);
+                Cell name = new Cell().add(new Paragraph(article.getName())).setMargin(0).setPaddings(0, 0, 2, 0)
+                        .setFontSize(9).setTextAlignment(TextAlignment.LEFT).setBorder(null);
+                Cell amount = new Cell().add(new Paragraph("" + article.getAmount())).setMargin(0).setTextAlignment(TextAlignment.RIGHT).setPaddings(0, 4, 2, 0)
+                        .setFontSize(9).setBorder(null);
+                Cell unitType = new Cell().add(new Paragraph(article.getUnit())).setMargin(0).setPaddings(0, 0, 2, 0)
+                        .setFontSize(9).setBorder(null);
+                Cell price = new Cell().add(new Paragraph(article.getPrice() + ".-")).setMargin(0).setPaddings(0, 0, 2, 0)
+                        .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
+                Cell discount = new Cell().add(new Paragraph(article.getDiscount() + "%")).setMargin(0).setPaddings(0, 0, 2, 0)
+                        .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
                 double totald = article.getPrice() * article.getAmount();
                 if (article.getDiscount() != 0) {
                     double dis = totald * article.getDiscount() / 100.0;
@@ -184,8 +172,8 @@ public class OfferPdf {
                 }
                 totald = Math.floor(totald * 100) / 100;
                 finalPrice += totald;
-                Cell total = new Cell().add(new Paragraph(totald + ".-")).setPaddings(0, 0, 2, 0)
-                        .setMargins(0,0,2,0).setFontSize(9).setBorder(null).setTextAlignment(TextAlignment.RIGHT);
+                Cell total = new Cell().add(new Paragraph(totald + ".-")).setMargin(0).setPaddings(0, 0, 2, 0)
+                        .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
 
 
                 table.addCell(articleNr);
@@ -196,7 +184,7 @@ public class OfferPdf {
                 table.addCell(discount);
                 table.addCell(total);
             }
-            Cell space = new Cell(1,6)
+            Cell space = new Cell(1, 6)
                     .add(new Paragraph(""))
                     .setFontSize(11)
                     .setBorder(null);
@@ -206,50 +194,125 @@ public class OfferPdf {
 
     }
 
-    private void createTotal(Table table, double total) {
+    private void createTotal(Table table, double total, OfferRequest offerRequest) {
 
-            Cell cell2 = new Cell(1, 6)
-                    .add(new Paragraph("Total"))
-                    .setFontSize(12)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell2);
-            Cell cell4 = new Cell(1, 4)
-                    .add(new Paragraph("Total Brutto"))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell4);
-            Cell cell5 = new Cell(1, 1)
-                    .add(new Paragraph("??%"))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell5);
-            Cell cell6 = new Cell(1, 1)
-                    .add(new Paragraph(Math.floor(total * 100) / 100 + ".-"))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell6);
-            Cell cell8 = new Cell(1, 6)
-                    .add(new Paragraph("Zusatzrabatt bei Abholung"))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell8);
-            Cell cell10 = new Cell(1, 4)
-                    .add(new Paragraph("MwST."))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell10);
-            Cell cell11 = new Cell(1, 1)
-                    .add(new Paragraph("7.7%"))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell11);
+        Cell comment = new Cell(1, 3)
+                .add(new Paragraph("Zahlungsziel: (Platzhalter bspw. 30 Tage netto)"))
+                .setFontSize(7)
+                .setBorderBottom(null)
+                .setBorderLeft(null)
+                .setBorderRight(null)
+                .setPaddingTop(0)
+                .setTextAlignment(TextAlignment.LEFT);
+        table.addCell(comment);
+        Cell totalString = new Cell(1, 1)
+                .add(new Paragraph("Total"))
+                .setFontSize(9)
+                .setBorderBottom(null)
+                .setBorderLeft(null)
+                .setBorderRight(null)
+                .setPaddingRight(0)
+                .setPaddingBottom(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(totalString);
+        Cell totalDouble = new Cell(1, 2)
+                .add(new Paragraph(Math.floor(total * 100) / 100 + " CHF"))
+                .setFontSize(9)
+                .setBorderBottom(null)
+                .setBorderLeft(null)
+                .setBorderRight(null)
+                .setPaddingRight(0)
+                .setPaddingBottom(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(totalDouble);
+        Cell emptySpace = new Cell(1, 3)
+                .add(new Paragraph(""))
+                .setBorder(null)
+                .setFontSize(9);
+        table.addCell(emptySpace);
+        Cell totalDiscountString = new Cell(1, 1)
+                .add(new Paragraph("Rabatt"))
+                .setFontSize(9)
+                .setBorder(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(totalDiscountString);
+        Cell totalDiscount = new Cell(1, 1)
+                .add(new Paragraph("-" + offerRequest.getDiscount() + "%"))
+                .setFontSize(9)
+                .setPadding(0)
+                .setBorder(null)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(totalDiscount);
+        Double toSubtract = Math.floor(total * offerRequest.getDiscount()) / 100;
+        Cell totalDisountComputed = new Cell(1, 1)
+                .add(new Paragraph("-" + toSubtract + " CHF"))
+                .setFontSize(9)
+                .setBorder(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(totalDisountComputed);
+        table.addCell(emptySpace);
+        Cell nettoString = new Cell(1, 1)
+                .add(new Paragraph("Netto"))
+                .setFontSize(9)
+                .setBorderLeft(null)
+                .setBorderBottom(null)
+                .setBorderRight(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(nettoString);
+        Double netto = total - toSubtract;
+        Cell nettoDouble = new Cell(1, 2)
+                .add(new Paragraph(netto + " CHF"))
+                .setFontSize(9)
+                .setBorderLeft(null)
+                .setBorderBottom(null)
+                .setBorderRight(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(nettoDouble);
+        table.addCell(emptySpace);
 
-            Cell cell12 = new Cell(1, 1)
-                    .add(new Paragraph("??"))
-                    .setFontSize(11)
-                    .setTextAlignment(TextAlignment.LEFT);
-            table.addCell(cell12);
+        Cell mwstString = new Cell(1, 1)
+                .add(new Paragraph("MWST"))
+                .setFontSize(9)
+                .setBorder(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(mwstString);
 
+        Cell mwstDisount = new Cell(1, 1)
+                .add(new Paragraph("7.7%"))
+                .setFontSize(9)
+                .setBorder(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(mwstDisount);
+        Cell mwstNumber = new Cell(1, 1)
+                .add(new Paragraph(Math.floor((netto + 0.077) * 100) / 100  + " CHF"))
+                .setFontSize(9)
+                .setBorder(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(mwstNumber);
+        table.addCell(emptySpace);
+        Cell finalAmountString = new Cell(1, 1)
+                .add(new Paragraph("Gesamtbetrag"))
+                .setFontSize(9)
+                .setBorderLeft(null)
+                .setBorderRight(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(finalAmountString);
+        Cell finalAmountNumber = new Cell(1, 2)
+                .add(new Paragraph(Math.floor((netto + 1.077) * 100) / 100  + " CHF"))
+                .setFontSize(9)
+                .setBorderLeft(null)
+                .setBorderRight(null)
+                .setPadding(0)
+                .setTextAlignment(TextAlignment.RIGHT);
+        table.addCell(finalAmountNumber);
     }
 
 }
