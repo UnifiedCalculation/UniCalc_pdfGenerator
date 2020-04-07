@@ -47,7 +47,8 @@ public class OfferPdf {
             PdfDocument pdfDocument = new PdfDocument(new PdfWriter(sourcePath));
 
             Document doc = new Document(pdfDocument);
-            generalPdf.createHeader(doc, offerRequest.getBusiness());
+            generalPdf.createHeader(doc, offerRequest.getProjectInformation().getCompany());
+            generalPdf.createLetterHead(doc, offerRequest.getProjectInformation());
 
             Table title = new Table(UnitValue.createPercentArray(new float[]{3, 2})).useAllAvailableWidth();
             Table tableHeader = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
@@ -95,6 +96,7 @@ public class OfferPdf {
                 .setFontSize(10)
                 .setWidth(2)
                 .setBorder(null)
+                .setPaddingLeft(14)
                 .setTextAlignment(TextAlignment.LEFT);
         title.addCell(date);
         Cell subTitle = new Cell(1, 1)

@@ -13,6 +13,5 @@ public class OfferRequest {
     private String title;
     private Integer discount;
     private Set<EntryRequest> entries;
-    private CompaniesRequest business;
     private ProjectRequest projectInformation;
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class CompaniesRequest {
+public class CompanyRequest {
 
     private String name;
     private String url;
@@ -17,4 +17,5 @@ public class CompaniesRequest {
     private String phone;
     private String zip;
     private String city;
+    private String contactPerson;
 }

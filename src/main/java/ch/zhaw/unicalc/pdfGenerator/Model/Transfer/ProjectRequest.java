@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Builder
 public class ProjectRequest {
-    private CustomerRequest projectLeader;
-    private CompaniesRequest company;
+    private CustomerRequest customer;
+    private CompanyRequest company;
 
 }

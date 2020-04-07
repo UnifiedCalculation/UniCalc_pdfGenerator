@@ -8,8 +8,11 @@ import lombok.Setter;
 @Getter
 @Builder
 public class CustomerRequest {
-    private String firstname;
-    private String lastname;
-    private String email;
-    private String phone;
+    private String name;
+    private String companyName;
+    private String department;
+    private String address;
+    private String land;
+    private String zip;
+    private String city;
 }

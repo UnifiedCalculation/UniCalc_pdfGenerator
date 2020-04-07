@@ -1,6 +1,6 @@
 package ch.zhaw.unicalc.pdfGenerator.Service;
 
-import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.CompaniesRequest;
+import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.CompanyRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.ProjectRequest;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.layout.Document;
@@ -31,12 +31,12 @@ public class GeneralPdf {
 
     /**
      * Generates and adds an Header to the given Document.
-     * Header includes name, url and logo of the business.
+     * Header includes name, url and logo of the company.
      *
      * @param doc      The Document to which the Header should be added
      * @param business The BusinessRequest with all needed Information
      */
-    public void createHeader(Document doc, CompaniesRequest business) {
+    public void createHeader(Document doc, CompanyRequest business) {
         float[] widths = {6, 3};
         Table table = new Table(UnitValue.createPercentArray(widths)).useAllAvailableWidth();
         Cell headerLeft = new Cell(1, 1)
@@ -58,20 +58,48 @@ public class GeneralPdf {
         } catch (MalformedURLException e) {
 
         }
-        table.setMarginBottom(70);
+        table.setMarginBottom(50);
         doc.add(table);
     }
 
 
     /**
      * Generates and adds an Letter Head to the given Document.
-     * In it, information like state, zip-code, business-name and contact person is noted.
+     * In it, information like state, zip-code, company-name and contact person is noted.
      *
      * @param doc                The Document to which everything should be added
-     * @param business           The BusinessRequest with all the Information about the Business
-     * @param projektInformation The ProjektInformationRequest with Information about the contact person
+     * @param projectInformation The ProjektInformationRequest with Information about the company and customer
      */
-    public void createLetterHead(Document doc, CompaniesRequest business, ProjectRequest projektInformation) {
+    public void createLetterHead(Document doc, ProjectRequest projectInformation) {
+        float[] widths = {5, 1, 2};
+        Table table = new Table(UnitValue.createPercentArray(widths)).useAllAvailableWidth();
+        Cell customer = new Cell(1,1)
+                .add(new Paragraph(projectInformation.getCustomer().getCompanyName() + "\n"
+                + "C/O " + projectInformation.getCustomer().getName() + "\n"
+                + projectInformation.getCustomer().getDepartment() + "\n"
+                + projectInformation.getCustomer().getAddress() + "\n"
+                + projectInformation.getCustomer().getLand() + "-" + projectInformation.getCustomer().getZip() + " " + projectInformation.getCustomer().getCity()))
+                .setFontSize(8)
+                .setBorder(null)
+                .setTextAlignment(TextAlignment.LEFT);
+        table.addCell(customer);
+        Cell company = new Cell(1,1)
+                .add(new Paragraph("Sachbearbeiter \nE-Mail \nTelefon"))
+                .setFontSize(7)
+                .setBorder(null)
+                .setTextAlignment(TextAlignment.LEFT);
+        table.addCell(company);
+        Cell companyInfo = new Cell(1,1)
+                .add(new Paragraph(projectInformation.getCompany().getContactPerson() + "\n"
+                + projectInformation.getCompany().getMail() + "\n"
+                + projectInformation.getCompany().getPhone()))
+                .setFontSize(7)
+                .setBorder(null)
+                .setTextAlignment(TextAlignment.LEFT);
+        table.addCell(companyInfo);
+        table.setMarginBottom(50);
+        doc.add(table);
+
 
     }
 
