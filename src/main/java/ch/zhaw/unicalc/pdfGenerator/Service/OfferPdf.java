@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter;
 @Service
 public class OfferPdf {
 
-    private String path = "target/temp/";
+    private String path = "src/main/resources/temp/";
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
     private float[] width = {7, 2, 2, 3, 2, 3};
     private GeneralPdf generalPdf;
