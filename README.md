@@ -1,8 +1,11 @@
 # UniCalc_pdfGenerator
 Microservice for generating PDFs
 
-POST-Request to localhost:8080/toPdf/offer for generating a PDF
-expects JSON:
+#### - POST-Request to localhost:8080/toPdf/offer for generating a offer-PDF
+
+#### - POST-Request to localhost:8080/toPdf/invoice for generating invoice-PDF
+
+###### Both expect this JSON
 {
   "discount": 0,
   "entries": [

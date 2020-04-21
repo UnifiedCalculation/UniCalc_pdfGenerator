@@ -22,21 +22,26 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-@Service
-public class OfferPdf {
 
-    private String path = "src/main/resources/temp/";
+/**
+ * Generates an Offer-PDF or Invoice-PDF. Both contain the same information. Only the Title is different.
+ *
+ */
+@Service
+public class OfferInvoicePdf {
+
+    private static final String path = "src/main/resources/temp/";
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
     private float[] width = {7, 2, 2, 3, 2, 3};
     private GeneralPdf generalPdf;
 
 
     @Autowired
-    public OfferPdf(GeneralPdf generalPdf) {
+    public OfferInvoicePdf(GeneralPdf generalPdf) {
         this.generalPdf = generalPdf;
     }
 
-    public byte[] generatePDF(OfferRequest offerRequest) {
+    public byte[] generatePDF(boolean isOffer, OfferRequest offerRequest) {
         // --------------- Create PDF -----------------------------
         try {
 
@@ -54,7 +59,7 @@ public class OfferPdf {
             Table tableHeader = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
             Table table = new Table(UnitValue.createPercentArray(width)).useAllAvailableWidth();
 
-            createTitle(title, offerRequest);
+            createTitle(isOffer, title, offerRequest);
             title.setPaddingBottom(0);
             createHeader(tableHeader);
             double total = createContent(table, offerRequest);
@@ -80,9 +85,8 @@ public class OfferPdf {
         return null;
     }
 
-    private void createTitle(Table title, OfferRequest offerRequest) {
+    private void createTitle(boolean isOffer, Table title, OfferRequest offerRequest) {
         Cell titleName = new Cell(1, 1)
-                .add(new Paragraph("Angebot " + offerRequest.getTitle()))
                 .setFontSize(10)
                 .setBold()
                 .setWidth(8)
@@ -90,6 +94,11 @@ public class OfferPdf {
                 .setPaddingBottom(0)
                 .setMarginBottom(0)
                 .setTextAlignment(TextAlignment.LEFT);
+        if(isOffer) {
+            titleName.add(new Paragraph("Angebot " + offerRequest.getTitle()));
+        } else {
+            titleName.add(new Paragraph("Rechnung " + offerRequest.getTitle()));
+        }
         title.addCell(titleName);
         Cell date = new Cell(1, 1)
                 .add(new Paragraph(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))))
