@@ -6,12 +6,10 @@ import lombok.Setter;
 
 import java.util.Set;
 
-@Getter
 @Setter
+@Getter
 @Builder
-public class OfferRequest {
+public class EntryRequest {
     private String title;
-    private Integer discount;
-    private Set<EntryRequest> entries;
-    private ProjectRequest projectInformation;
+    private Set<ArticleRequest> articles;
 }

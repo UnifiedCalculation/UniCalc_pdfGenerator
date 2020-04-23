@@ -8,8 +8,9 @@ import lombok.Setter;
 @Getter
 @Builder
 public class ArticleRequest {
+
     private String name;
-    private Integer id;
+    private Integer number;
     private String unit;
     private Integer amount;
     private Integer discount;
