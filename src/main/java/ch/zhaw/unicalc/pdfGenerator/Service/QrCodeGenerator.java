@@ -7,6 +7,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -22,6 +23,7 @@ import java.util.Map;
  *  https://www.paymentstandards.ch/dam/downloads/qrcodegenerator.java
  *  Path where the Swiss-cross is had to be changed
  */
+@Service
 public class QrCodeGenerator {
 
     private static final String OVERLAY_IMAGE = "src/main/resources/pictures/CH-Kreuz_7mm.png";
@@ -77,8 +79,8 @@ public class QrCodeGenerator {
             "//S1/10/10201409/11/181105/40/0:30\r\n" +
             "eBill/B/41010560425610173";
 
-    public void generateOR(String payload) {
-        generateSwissQrCode(payload);
+    public void generateQR(String payload) {
+        generateSwissQrCode(PAYLOAD_1);
     }
 
     private void generateSwissQrCode(String payload) {

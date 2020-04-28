@@ -4,6 +4,7 @@ import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.ArticleRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.EntryRequest;
 import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
@@ -34,11 +35,13 @@ public class OfferInvoicePdf {
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
     private float[] width = {7, 2, 2, 3, 2, 3};
     private GeneralPdf generalPdf;
+    private InvoicePdf invoicePdf;
 
 
     @Autowired
-    public OfferInvoicePdf(GeneralPdf generalPdf) {
+    public OfferInvoicePdf(GeneralPdf generalPdf, InvoicePdf invoicePdf) {
         this.generalPdf = generalPdf;
+        this.invoicePdf = invoicePdf;
     }
 
     public byte[] generatePDF(boolean isOffer, OfferRequest offerRequest) {
@@ -68,6 +71,11 @@ public class OfferInvoicePdf {
             doc.add(title);
             doc.add(tableHeader);
             doc.add(table);
+
+            if(!isOffer) {
+                invoicePdf.generateInvoice(pdfDocument);
+
+            }
             doc.close();
 
 
