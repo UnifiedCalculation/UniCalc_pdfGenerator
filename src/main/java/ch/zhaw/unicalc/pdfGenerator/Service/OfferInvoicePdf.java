@@ -66,14 +66,14 @@ public class OfferInvoicePdf {
             title.setPaddingBottom(0);
             createHeader(tableHeader);
             double total = createContent(table, offerRequest);
-            createTotal(table, total, offerRequest);
+            double finalTotal = createTotal(table, total, offerRequest);
 
             doc.add(title);
             doc.add(tableHeader);
             doc.add(table);
 
             if(!isOffer) {
-                invoicePdf.generateInvoice(pdfDocument);
+                invoicePdf.generateInvoice(pdfDocument, offerRequest, finalTotal);
 
             }
             doc.close();
@@ -213,7 +213,7 @@ public class OfferInvoicePdf {
 
     }
 
-    private void createTotal(Table table, double total, OfferRequest offerRequest) {
+    private double createTotal(Table table, double total, OfferRequest offerRequest) {
 
         Cell comment = new Cell(1, 3)
                 .add(new Paragraph("Zahlungsziel: (Platzhalter bspw. 30 Tage netto)"))
@@ -324,14 +324,16 @@ public class OfferInvoicePdf {
                 .setPadding(0)
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(finalAmountString);
+        double finalTotal = Math.floor((netto + 1.077) * 100) / 100;
         Cell finalAmountNumber = new Cell(1, 2)
-                .add(new Paragraph(Math.floor((netto + 1.077) * 100) / 100  + " CHF"))
+                .add(new Paragraph( finalTotal + " CHF"))
                 .setFontSize(9)
                 .setBorderLeft(null)
                 .setBorderRight(null)
                 .setPadding(0)
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(finalAmountNumber);
+        return finalTotal;
     }
 
 }
