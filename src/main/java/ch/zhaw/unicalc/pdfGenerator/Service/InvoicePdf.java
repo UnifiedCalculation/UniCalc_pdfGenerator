@@ -1,7 +1,7 @@
 package ch.zhaw.unicalc.pdfGenerator.Service;
 
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
-import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -14,8 +14,6 @@ import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.StyleConstants;
-import java.awt.*;
 import java.net.MalformedURLException;
 
 
@@ -25,7 +23,8 @@ import java.net.MalformedURLException;
 @Service
 public class InvoicePdf {
     private QrCodeGenerator qrCodeGenerator;
-    private String path = "src/main/resources/temp/combined.png";
+    private final String qrImagePath = "src/main/resources/temp/combined.png";
+    private final String scissorImagePath = "src/main/resources/pictures/Scherensymbol.png";
     private final static double heightUnit = 842/297;
     private final static double widthUnit = 594/210;
 
@@ -39,17 +38,21 @@ public class InvoicePdf {
         Rectangle rectangle = new Rectangle(0, 0, 594, (float) (105*heightUnit));
         PdfCanvas pdfCanvas = new PdfCanvas(page);
         pdfCanvas.rectangle(rectangle).setFillColor(ColorConstants.CYAN).fill();
-        pdfCanvas.setStrokeColor(ColorConstants.GREEN).stroke();
         Canvas canvas = new Canvas(pdfCanvas, pdfDocument, rectangle);
         qrCodeGenerator.generateQR(generatePayload(offerRequest, total));
-        Image image = null;
+        Image qrImage = null;
+        Image scissorsImage = null;
         try {
-            image = new Image(ImageDataFactory.create(path)).setMaxWidth((float) (56 *widthUnit)).setPadding(0);
+            qrImage = new Image(ImageDataFactory.create(qrImagePath)).setMaxWidth((float) (56 *widthUnit)).setPadding(0);
+            scissorsImage = new Image(ImageDataFactory.create(scissorImagePath)).setMaxWidth((float)widthUnit*10).setPadding(0);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        if (image != null) {
-            canvas.add(image.setFixedPosition(178, (float)heightUnit*35));
+        if (qrImage != null) {
+            canvas.add(qrImage.setFixedPosition(178, (float)heightUnit*35));
+        }
+        if(scissorsImage != null) {
+            canvas.add(scissorsImage.setFixedPosition((float)widthUnit*57, 0));
         }
         canvas.setFontColor(ColorConstants.BLACK);
         canvas.add(new Paragraph("Empfangsschein").setFontSize(11).setBold().setPaddings((float) heightUnit*6,(float)widthUnit*5, (float)widthUnit*3,(float)widthUnit*5).setMargin(0));
