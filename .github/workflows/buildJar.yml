@@ -18,3 +18,9 @@ jobs:
           java-version: 1.11
       - name: Build with Maven
         run: mvn -B package --file pom.xml
+      - name: Create dir and copy jar to upload
+        run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v1
+        with:
+          name: ch.zhaw.unicalc.pdfGenerator
+          path: staging
