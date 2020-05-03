@@ -1,17 +1,21 @@
 package ch.zhaw.unicalc.pdfGenerator.Service;
 
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
+import com.itextpdf.io.font.FontProgram;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.StyleConstants;
+import java.awt.*;
 import java.net.MalformedURLException;
 
 
@@ -22,6 +26,8 @@ import java.net.MalformedURLException;
 public class InvoicePdf {
     private QrCodeGenerator qrCodeGenerator;
     private String path = "src/main/resources/temp/combined.png";
+    private final static double heightUnit = 842/297;
+    private final static double widthUnit = 594/210;
 
     @Autowired
     public InvoicePdf(QrCodeGenerator qrCodeGenerator) {
@@ -30,22 +36,27 @@ public class InvoicePdf {
 
     public void generateInvoice(PdfDocument pdfDocument, OfferRequest offerRequest, double total) {
         PdfPage page = pdfDocument.addNewPage();
-        Rectangle rectangle = new Rectangle(0, 0, 100, 250);
+        Rectangle rectangle = new Rectangle(0, 0, 594, (float) (105*heightUnit));
         PdfCanvas pdfCanvas = new PdfCanvas(page);
-        pdfCanvas.rectangle(rectangle);
-        pdfCanvas.stroke();
+        pdfCanvas.rectangle(rectangle).setFillColor(ColorConstants.CYAN).fill();
+        pdfCanvas.setStrokeColor(ColorConstants.GREEN).stroke();
         Canvas canvas = new Canvas(pdfCanvas, pdfDocument, rectangle);
         qrCodeGenerator.generateQR(generatePayload(offerRequest, total));
         Image image = null;
         try {
-            image = new Image(ImageDataFactory.create(path)).setMaxHeight(30).setPadding(0);
+            image = new Image(ImageDataFactory.create(path)).setMaxWidth((float) (56 *widthUnit)).setPadding(0);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         if (image != null) {
-            canvas.add(image);
+            canvas.add(image.setFixedPosition(178, (float)heightUnit*35));
         }
-        canvas.add(new Paragraph("Hello"));
+        canvas.setFontColor(ColorConstants.BLACK);
+        canvas.add(new Paragraph("Empfangsschein").setFontSize(11).setBold().setPaddings((float) heightUnit*6,(float)widthUnit*5, (float)widthUnit*3,(float)widthUnit*5).setMargin(0));
+        canvas.add(new Paragraph("Konto / Zahlbar an").setFontSize(7).setBold().setPaddings(0, 0, 0, (float)widthUnit*5).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getCompany().getAccount() +"\n"+
+                offerRequest.getProjectInformation().getCompany().getName()+"\n"+
+                offerRequest.getProjectInformation().getCompany().getZip() +" "+ offerRequest.getProjectInformation().getCompany().getCity()).setFontSize(8).setPaddings(0, 0, 0, (float)widthUnit*5).setMargin(0));
         canvas.close();
 
     }
