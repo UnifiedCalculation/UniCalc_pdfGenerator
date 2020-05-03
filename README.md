@@ -3,9 +3,9 @@ Microservice for generating PDFs
 ##### !Important always send a correct URL for the logo of the company! 
 (Example: company.logo: https://www.freelogodesign.org/Content/img/logo-samples/flooop.png)
 
-#### - POST-Request to localhost:8080/toPdf/offer for generating a offer-PDF
+### - POST-Request to localhost:8080/toPdf/offer for generating a offer-PDF
 
-#### - POST-Request to localhost:8080/toPdf/invoice for generating invoice-PDF
+### - POST-Request to localhost:8080/toPdf/invoice for generating invoice-PDF
 
 ###### Both expect this JSON
 {  
