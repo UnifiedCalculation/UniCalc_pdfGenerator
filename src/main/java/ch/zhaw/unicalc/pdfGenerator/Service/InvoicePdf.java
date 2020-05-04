@@ -35,31 +35,44 @@ public class InvoicePdf {
 
     public void generateInvoice(PdfDocument pdfDocument, OfferRequest offerRequest, double total) {
         PdfPage page = pdfDocument.addNewPage();
-        Rectangle rectangle = new Rectangle(0, 0, 594, (float) (105*heightUnit));
+        Rectangle rectangle = new Rectangle(0, 0, 594, (float) heightUnit*110);
         PdfCanvas pdfCanvas = new PdfCanvas(page);
         pdfCanvas.rectangle(rectangle).setFillColor(ColorConstants.CYAN).fill();
         Canvas canvas = new Canvas(pdfCanvas, pdfDocument, rectangle);
         qrCodeGenerator.generateQR(generatePayload(offerRequest, total));
         Image qrImage = null;
-        Image scissorsImage = null;
+        Image scissorImage = null;
         try {
             qrImage = new Image(ImageDataFactory.create(qrImagePath)).setMaxWidth((float) (56 *widthUnit)).setPadding(0);
-            scissorsImage = new Image(ImageDataFactory.create(scissorImagePath)).setMaxWidth((float)widthUnit*10).setPadding(0);
+            scissorImage = new Image(ImageDataFactory.create(scissorImagePath)).setMaxWidth(594).setPadding(0).setMargins(0,0,0,0);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
         if (qrImage != null) {
             canvas.add(qrImage.setFixedPosition(178, (float)heightUnit*35));
         }
-        if(scissorsImage != null) {
-            canvas.add(scissorsImage.setFixedPosition((float)widthUnit*57, 0));
+        if(scissorImage != null) {
+            canvas.add(scissorImage.setFixedPosition(0, (float) heightUnit*105));
         }
+
         canvas.setFontColor(ColorConstants.BLACK);
-        canvas.add(new Paragraph("Empfangsschein").setFontSize(11).setBold().setPaddings((float) heightUnit*6,(float)widthUnit*5, (float)widthUnit*3,(float)widthUnit*5).setMargin(0));
-        canvas.add(new Paragraph("Konto / Zahlbar an").setFontSize(7).setBold().setPaddings(0, 0, 0, (float)widthUnit*5).setMargin(0));
+        canvas.add(new Paragraph("Empfangsschein").setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*100, (float) widthUnit*52).setFontSize(11).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph("Konto / Zahlbar an").setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*93, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
         canvas.add(new Paragraph(offerRequest.getProjectInformation().getCompany().getAccount() +"\n"+
                 offerRequest.getProjectInformation().getCompany().getName()+"\n"+
-                offerRequest.getProjectInformation().getCompany().getZip() +" "+ offerRequest.getProjectInformation().getCompany().getCity()).setFontSize(8).setPaddings(0, 0, 0, (float)widthUnit*5).setMargin(0));
+                offerRequest.getProjectInformation().getCompany().getZip() +" "+ offerRequest.getProjectInformation().getCompany().getCity()).setFixedPosition((float)widthUnit*5, (float) heightUnit*78, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+
+        canvas.add(new Paragraph("Referenz").setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*70, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getBankInformation().getPaymentReference()).setFixedPosition((float)widthUnit*5, (float) heightUnit*65, (float) widthUnit*60).setFontSize(7).setPadding(0).setMargin(0));
+
+        canvas.add(new Paragraph("Zahlbar durch").setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*58, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getCustomer().getCompanyName() + "\n" +
+                offerRequest.getProjectInformation().getCustomer().getZip() + " " +
+                offerRequest.getProjectInformation().getCustomer().getCity()).setFontSize(7).setFixedPosition((float)widthUnit*5, (float) heightUnit*48, (float) widthUnit*52).setPadding(0).setMargin(0));
+
+        canvas.add(new Paragraph("Währung\t\t Betrag").setFontSize(7).setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*37, (float) widthUnit*52).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph("CHF\t\t\t " + total).setFixedPosition((float)widthUnit*5, (float) heightUnit*32, (float) widthUnit*52).setFontSize(8).setPaddingTop((float) heightUnit*15).setMargin(0));
+
         canvas.close();
 
     }

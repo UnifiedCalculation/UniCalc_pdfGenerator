@@ -46,17 +46,19 @@ public class GeneralPdf {
                 .setBorder(null)
                 .setTextAlignment(TextAlignment.LEFT);
         table.addCell(headerLeft);
-        try {
-            Image image = new Image(ImageDataFactory.create(business.getLogo())).setMaxHeight(30).setPadding(0);
-            Cell headerLogo = new Cell(1, 1)
-                    .add(new Paragraph().add(image))
-                    .setWidth(widths[1])
-                    .setFontSize(9)
-                    .setTextAlignment(TextAlignment.RIGHT)
-                    .setBorder(null);
-            table.addCell(headerLogo);
-        } catch (MalformedURLException e) {
+        if (business.getLogo() != null) {
+            try {
+                Image image = new Image(ImageDataFactory.create(business.getLogo())).setMaxHeight(30).setPadding(0);
+                Cell headerLogo = new Cell(1, 1)
+                        .add(new Paragraph().add(image))
+                        .setWidth(widths[1])
+                        .setFontSize(9)
+                        .setTextAlignment(TextAlignment.RIGHT)
+                        .setBorder(null);
+                table.addCell(headerLogo);
+            } catch (MalformedURLException e) {
 
+            }
         }
         table.setMarginBottom(50);
         doc.add(table);
@@ -73,26 +75,26 @@ public class GeneralPdf {
     public void createLetterHead(Document doc, ProjectRequest projectInformation) {
         float[] widths = {5, 1, 2};
         Table table = new Table(UnitValue.createPercentArray(widths)).useAllAvailableWidth();
-        Cell customer = new Cell(1,1)
+        Cell customer = new Cell(1, 1)
                 .add(new Paragraph(projectInformation.getCustomer().getCompanyName() + "\n"
-                + "C/O " + projectInformation.getCustomer().getName() + "\n"
-                + projectInformation.getCustomer().getDepartment() + "\n"
-                + projectInformation.getCustomer().getAddress() + "\n"
-                + projectInformation.getCustomer().getLand() + "-" + projectInformation.getCustomer().getZip() + " " + projectInformation.getCustomer().getCity()))
+                        + "C/O " + projectInformation.getCustomer().getName() + "\n"
+                        + projectInformation.getCustomer().getDepartment() + "\n"
+                        + projectInformation.getCustomer().getAddress() + "\n"
+                        + projectInformation.getCustomer().getLand() + "-" + projectInformation.getCustomer().getZip() + " " + projectInformation.getCustomer().getCity()))
                 .setFontSize(8)
                 .setBorder(null)
                 .setTextAlignment(TextAlignment.LEFT);
         table.addCell(customer);
-        Cell company = new Cell(1,1)
+        Cell company = new Cell(1, 1)
                 .add(new Paragraph("Sachbearbeiter \nE-Mail \nTelefon"))
                 .setFontSize(7)
                 .setBorder(null)
                 .setTextAlignment(TextAlignment.LEFT);
         table.addCell(company);
-        Cell companyInfo = new Cell(1,1)
+        Cell companyInfo = new Cell(1, 1)
                 .add(new Paragraph(projectInformation.getCompany().getContactPerson() + "\n"
-                + projectInformation.getCompany().getMail() + "\n"
-                + projectInformation.getCompany().getPhone()))
+                        + projectInformation.getCompany().getMail() + "\n"
+                        + projectInformation.getCompany().getPhone()))
                 .setFontSize(7)
                 .setBorder(null)
                 .setTextAlignment(TextAlignment.LEFT);
