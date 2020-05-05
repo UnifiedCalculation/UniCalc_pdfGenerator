@@ -52,7 +52,7 @@ public class InvoicePdf {
             e.printStackTrace();
         }
         if (qrImage != null) {
-            canvas.add(qrImage.setFixedPosition((float)widthUnit*82, (float)heightUnit*37));
+            canvas.add(qrImage.setFixedPosition((float)widthUnit*82, (float)heightUnit*42));
         }
         if(scissorImage != null) {
             canvas.add(scissorImage.setFixedPosition(0, (float) heightUnit*105));
@@ -62,6 +62,19 @@ public class InvoicePdf {
         createLeftSideOfPayment(canvas, offerRequest, total);
         /* Rechte Teil */
         canvas.add(new Paragraph("Zahlteil").setBold().setFontSize(11).setPadding(0).setMargin(0).setFixedPosition((float)widthUnit*85, (float)heightUnit*100, (float)widthUnit*56));
+
+        canvas.add(new Paragraph("Währung\tBetrag").setBold().setFontSize(7).setPadding(0).setMargin(0).setFixedPosition((float)widthUnit*85, (float) heightUnit*30, (float) widthUnit*52));
+        canvas.add(new Paragraph("CHF\t\t " + total).setFixedPosition((float)widthUnit*85, (float) heightUnit*25, (float) widthUnit*52).setFontSize(8).setPaddingTop((float) heightUnit*15).setMargin(0));
+
+        /* Bereich Rechts Angaben */
+        canvas.add(new Paragraph("Konto / Zahlbar an").setBold().setFixedPosition((float)widthUnit*148, (float) heightUnit*93, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getCompany().getAccount() +"\n"+
+                offerRequest.getProjectInformation().getCompany().getName()+"\n" +
+                offerRequest.getProjectInformation().getCompany().getAddress() + "\n" +
+                offerRequest.getProjectInformation().getCompany().getZip() +" "+ offerRequest.getProjectInformation().getCompany().getCity()).setFixedPosition((float)widthUnit*148, (float) heightUnit*78, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+
+
+
         canvas.close();
 
     }
@@ -121,10 +134,10 @@ public class InvoicePdf {
                 offerRequest.getProjectInformation().getCustomer().getZip() + " " +
                 offerRequest.getProjectInformation().getCustomer().getCity()).setFontSize(7).setFixedPosition((float)widthUnit*5, (float) heightUnit*48, (float) widthUnit*52).setPadding(0).setMargin(0));
 
-        canvas.add(new Paragraph("Währung\t\t Betrag").setFontSize(7).setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*37, (float) widthUnit*52).setPadding(0).setMargin(0));
-        canvas.add(new Paragraph("CHF\t\t\t " + total).setFixedPosition((float)widthUnit*5, (float) heightUnit*32, (float) widthUnit*52).setFontSize(8).setPaddingTop((float) heightUnit*15).setMargin(0));
+        canvas.add(new Paragraph("Währung\t\t Betrag").setFontSize(7).setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*30, (float) widthUnit*52).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph("CHF\t\t\t " + total).setFixedPosition((float)widthUnit*5, (float) heightUnit*25, (float) widthUnit*52).setFontSize(8).setPaddingTop((float) heightUnit*15).setMargin(0));
 
-        canvas.add(new Paragraph("Annahmestelle").setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*18, (float) widthUnit*64).setTextAlignment(TextAlignment.RIGHT).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph("Annahmestelle").setBold().setFixedPosition((float)widthUnit*5, (float) heightUnit*13, (float) widthUnit*64).setTextAlignment(TextAlignment.RIGHT).setFontSize(7).setPadding(0).setMargin(0));
 
         canvas.add(new Paragraph("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n").setFontSize(9).setFixedPosition((float)widthUnit*62, 0, 30).setBorderRight(new DashedBorder(1)).setMargin(0).setPadding(0));
 
