@@ -67,12 +67,23 @@ public class InvoicePdf {
         canvas.add(new Paragraph("CHF\t\t " + total).setFixedPosition((float)widthUnit*85, (float) heightUnit*25, (float) widthUnit*52).setFontSize(8).setPaddingTop((float) heightUnit*15).setMargin(0));
 
         /* Bereich Rechts Angaben */
-        canvas.add(new Paragraph("Konto / Zahlbar an").setBold().setFixedPosition((float)widthUnit*148, (float) heightUnit*93, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph("Konto / Zahlbar an").setBold().setFixedPosition((float)widthUnit*148, (float) heightUnit*102, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
         canvas.add(new Paragraph(offerRequest.getProjectInformation().getCompany().getAccount() +"\n"+
                 offerRequest.getProjectInformation().getCompany().getName()+"\n" +
                 offerRequest.getProjectInformation().getCompany().getAddress() + "\n" +
-                offerRequest.getProjectInformation().getCompany().getZip() +" "+ offerRequest.getProjectInformation().getCompany().getCity()).setFixedPosition((float)widthUnit*148, (float) heightUnit*78, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+                offerRequest.getProjectInformation().getCompany().getZip() +" "+ offerRequest.getProjectInformation().getCompany().getCity()).setFixedPosition((float)widthUnit*148, (float) heightUnit*82, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
 
+        canvas.add(new Paragraph("Referenz").setBold().setFixedPosition((float)widthUnit*148, (float) heightUnit*73, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getBankInformation().getPaymentReference()).setFixedPosition((float)widthUnit*148, (float) heightUnit*68, (float) widthUnit*60).setFontSize(7).setPadding(0).setMargin(0));
+
+        canvas.add(new Paragraph("Zusätzliche Informationen").setBold().setFixedPosition((float)widthUnit*148, (float) heightUnit*61, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getBankInformation().getAdditionalInformation()).setFixedPosition((float)widthUnit*148, (float) heightUnit*56, (float) widthUnit*60).setFontSize(7).setPadding(0).setMargin(0));
+
+        canvas.add(new Paragraph("Zahlbar durch").setBold().setFixedPosition((float)widthUnit*148, (float) heightUnit*45, (float) widthUnit*52).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getCustomer().getCompanyName() + "\n" +
+                offerRequest.getProjectInformation().getCustomer().getAddress() + "\n" +
+                offerRequest.getProjectInformation().getCustomer().getZip() + " " +
+                offerRequest.getProjectInformation().getCustomer().getCity()).setFontSize(7).setFixedPosition((float)widthUnit*148, (float) heightUnit*30, (float) widthUnit*52).setPadding(0).setMargin(0));
 
 
         canvas.close();
