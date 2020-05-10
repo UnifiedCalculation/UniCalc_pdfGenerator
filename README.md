@@ -1,4 +1,6 @@
 # UniCalc_pdfGenerator
+![Heroku](https://heroku-badge.herokuapp.com/?app=unicalc-pdfgenerator)
+
 Microservice for generating PDFs 
 ##### !Important always send a correct URL for the logo of the company! 
 (Example: company.logo: https://www.freelogodesign.org/Content/img/logo-samples/flooop.png)
@@ -11,6 +13,7 @@ http://localhost:8080/swagger-ui.html
 ### - POST-Request to localhost:8080/toPdf/invoice for generating invoice-PDF
 
 ###### Both expect this JSON
+```json
 {  
   "discount": 0,  
   "entries": [  
@@ -52,5 +55,6 @@ http://localhost:8080/swagger-ui.html
     }  
   },  
   "title": "string"  
-}  
+}
+```
   
