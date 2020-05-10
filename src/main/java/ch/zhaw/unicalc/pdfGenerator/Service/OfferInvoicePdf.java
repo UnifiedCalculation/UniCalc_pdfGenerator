@@ -4,7 +4,6 @@ import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.ArticleRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.OfferRequest;
 import ch.zhaw.unicalc.pdfGenerator.Model.Transfer.EntryRequest;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
@@ -26,7 +25,6 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Generates an Offer-PDF or Invoice-PDF. Both contain the same information. Only the Title is different.
- *
  */
 @Service
 public class OfferInvoicePdf {
@@ -72,7 +70,7 @@ public class OfferInvoicePdf {
             doc.add(tableHeader);
             doc.add(table);
 
-            if(!isOffer) {
+            if (!isOffer) {
                 invoicePdf.generateInvoice(pdfDocument, offerRequest, finalTotal);
             }
             doc.close();
@@ -101,7 +99,7 @@ public class OfferInvoicePdf {
                 .setPaddingBottom(0)
                 .setMarginBottom(0)
                 .setTextAlignment(TextAlignment.LEFT);
-        if(isOffer) {
+        if (isOffer) {
             titleName.add(new Paragraph("Angebot " + offerRequest.getTitle()));
         } else {
             titleName.add(new Paragraph("Rechnung " + offerRequest.getTitle()));
@@ -308,7 +306,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(mwstDisount);
         Cell mwstNumber = new Cell(1, 1)
-                .add(new Paragraph(Math.floor((netto * 0.077) * 100) / 100  + " CHF"))
+                .add(new Paragraph(Math.floor((netto * 0.077) * 100) / 100 + " CHF"))
                 .setFontSize(9)
                 .setBorder(null)
                 .setPadding(0)
@@ -325,7 +323,7 @@ public class OfferInvoicePdf {
         table.addCell(finalAmountString);
         double finalTotal = Math.floor((netto * 1.077) * 100) / 100;
         Cell finalAmountNumber = new Cell(1, 2)
-                .add(new Paragraph( finalTotal + " CHF"))
+                .add(new Paragraph(finalTotal + " CHF"))
                 .setFontSize(9)
                 .setBorderLeft(null)
                 .setBorderRight(null)

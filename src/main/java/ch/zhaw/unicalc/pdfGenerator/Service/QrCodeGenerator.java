@@ -20,9 +20,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *  Java-Class from paymentstandards.ch
- *  https://www.paymentstandards.ch/dam/downloads/qrcodegenerator.java
- *  Path where the Swiss-cross is had to be changed
+ * Java-Class from paymentstandards.ch
+ * https://www.paymentstandards.ch/dam/downloads/qrcodegenerator.java
+ * Path where the Swiss-cross is had to be changed
  */
 @Service
 public class QrCodeGenerator {
@@ -43,7 +43,8 @@ public class QrCodeGenerator {
     private static final int QR_CODE_EDGE_SIDE_PX = SWISS_CROSS_EDGE_SIDE_PX / SWISS_CROSS_EDGE_SIDE_MM * QR_CODE_EDGE_SIDE_MM;
 
     @Autowired
-    public QrCodeGenerator() {}
+    public QrCodeGenerator() {
+    }
 
     public void generateQR(String payload) {
         generateSwissQrCode(payload);
