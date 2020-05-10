@@ -1,5 +1,5 @@
 # UniCalc_pdfGenerator
-![Heroku](https://heroku-badge.herokuapp.com/?app=unicalc-pdfgenerator)
+![Heroku](https://heroku-badge.herokuapp.com/?app=unicalc-pdfgenerator&root=swagger-ui.html)
 
 Microservice for generating PDFs 
 ##### !Important always send a correct URL for the logo of the company! 
