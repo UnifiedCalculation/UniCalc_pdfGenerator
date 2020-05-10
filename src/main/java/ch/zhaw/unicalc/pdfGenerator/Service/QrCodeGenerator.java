@@ -7,6 +7,7 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
@@ -40,6 +41,9 @@ public class QrCodeGenerator {
     private static final int QR_CODE_EDGE_SIDE_MM = 42 + 13;
 
     private static final int QR_CODE_EDGE_SIDE_PX = SWISS_CROSS_EDGE_SIDE_PX / SWISS_CROSS_EDGE_SIDE_MM * QR_CODE_EDGE_SIDE_MM;
+
+    @Autowired
+    public QrCodeGenerator() {}
 
     public void generateQR(String payload) {
         generateSwissQrCode(payload);

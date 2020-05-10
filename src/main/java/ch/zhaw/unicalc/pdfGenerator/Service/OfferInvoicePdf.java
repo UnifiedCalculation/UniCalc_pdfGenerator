@@ -74,7 +74,6 @@ public class OfferInvoicePdf {
 
             if(!isOffer) {
                 invoicePdf.generateInvoice(pdfDocument, offerRequest, finalTotal);
-
             }
             doc.close();
 
@@ -309,7 +308,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(mwstDisount);
         Cell mwstNumber = new Cell(1, 1)
-                .add(new Paragraph(Math.floor((netto + 0.077) * 100) / 100  + " CHF"))
+                .add(new Paragraph(Math.floor((netto * 0.077) * 100) / 100  + " CHF"))
                 .setFontSize(9)
                 .setBorder(null)
                 .setPadding(0)
@@ -324,7 +323,7 @@ public class OfferInvoicePdf {
                 .setPadding(0)
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(finalAmountString);
-        double finalTotal = Math.floor((netto + 1.077) * 100) / 100;
+        double finalTotal = Math.floor((netto * 1.077) * 100) / 100;
         Cell finalAmountNumber = new Cell(1, 2)
                 .add(new Paragraph( finalTotal + " CHF"))
                 .setFontSize(9)
