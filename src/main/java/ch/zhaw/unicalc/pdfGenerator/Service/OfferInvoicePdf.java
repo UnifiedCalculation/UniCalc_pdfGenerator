@@ -177,7 +177,7 @@ public class OfferInvoicePdf {
                         .setFontSize(9).setBorder(null);
                 Cell unitType = new Cell().add(new Paragraph(article.getUnit())).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setBorder(null);
-                Cell price = new Cell().add(new Paragraph(article.getPrice() + ".-")).setMargin(0).setPaddings(0, 0, 2, 0)
+                Cell price = new Cell().add(new Paragraph(String.format("%.2f.-", article.getPrice()))).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
                 Cell discount = new Cell().add(new Paragraph(article.getDiscount() + "%")).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
@@ -188,7 +188,7 @@ public class OfferInvoicePdf {
                 }
                 totald = Math.floor(totald * 100) / 100;
                 finalPrice += totald;
-                Cell total = new Cell().add(new Paragraph(totald + ".-")).setMargin(0).setPaddings(0, 0, 2, 0)
+                Cell total = new Cell().add(new Paragraph(String.format("%.2f.-", totald ))).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
 
 
@@ -232,7 +232,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(totalString);
         Cell totalDouble = new Cell(1, 2)
-                .add(new Paragraph(Math.floor(total * 100) / 100 + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", (Math.floor(total * 100) / 100))))
                 .setFontSize(9)
                 .setBorderBottom(null)
                 .setBorderLeft(null)
@@ -262,7 +262,7 @@ public class OfferInvoicePdf {
         table.addCell(totalDiscount);
         Double toSubtract = Math.floor(total * offerRequest.getDiscount()) / 100;
         Cell totalDisountComputed = new Cell(1, 1)
-                .add(new Paragraph("-" + toSubtract + " CHF"))
+                .add(new Paragraph(String.format("-%.2f CHF", toSubtract)))
                 .setFontSize(9)
                 .setBorder(null)
                 .setPadding(0)
@@ -280,7 +280,7 @@ public class OfferInvoicePdf {
         table.addCell(nettoString);
         Double netto = total - toSubtract;
         Cell nettoDouble = new Cell(1, 2)
-                .add(new Paragraph(netto + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", netto)))
                 .setFontSize(9)
                 .setBorderLeft(null)
                 .setBorderBottom(null)
@@ -306,7 +306,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(mwstDisount);
         Cell mwstNumber = new Cell(1, 1)
-                .add(new Paragraph(Math.floor((netto * 0.077) * 100) / 100 + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", (Math.floor((netto * 0.077) * 100) / 100))))
                 .setFontSize(9)
                 .setBorder(null)
                 .setPadding(0)
@@ -323,7 +323,7 @@ public class OfferInvoicePdf {
         table.addCell(finalAmountString);
         double finalTotal = Math.floor((netto * 1.077) * 100) / 100;
         Cell finalAmountNumber = new Cell(1, 2)
-                .add(new Paragraph(finalTotal + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", finalTotal)))
                 .setFontSize(9)
                 .setBorderLeft(null)
                 .setBorderRight(null)

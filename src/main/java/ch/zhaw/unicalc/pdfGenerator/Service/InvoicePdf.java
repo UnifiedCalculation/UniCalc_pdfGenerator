@@ -126,7 +126,7 @@ public class InvoicePdf {
                 offerRequest.getProjectInformation().getCustomer().getCity()).setFontSize(7).setFixedPosition((float) widthUnit * 5, (float) heightUnit * 48, (float) widthUnit * 52).setPadding(0).setMargin(0));
 
         canvas.add(new Paragraph("Währung\t\t Betrag").setFontSize(7).setBold().setFixedPosition((float) widthUnit * 5, (float) heightUnit * 30, (float) widthUnit * 52).setPadding(0).setMargin(0));
-        canvas.add(new Paragraph("CHF\t\t\t " + total).setFixedPosition((float) widthUnit * 5, (float) heightUnit * 25, (float) widthUnit * 52).setFontSize(8).setPaddingTop((float) heightUnit * 15).setMargin(0));
+        canvas.add(new Paragraph(String.format("CHF\t\t\t %.2f", total)).setFixedPosition((float) widthUnit * 5, (float) heightUnit * 25, (float) widthUnit * 52).setFontSize(8).setPaddingTop((float) heightUnit * 15).setMargin(0));
 
         canvas.add(new Paragraph("Annahmestelle").setBold().setFixedPosition((float) widthUnit * 5, (float) heightUnit * 13, (float) widthUnit * 64).setTextAlignment(TextAlignment.RIGHT).setFontSize(7).setPadding(0).setMargin(0));
 
@@ -140,7 +140,7 @@ public class InvoicePdf {
         canvas.add(new Paragraph("Zahlteil").setBold().setFontSize(11).setPadding(0).setMargin(0).setFixedPosition((float) widthUnit * 85, (float) heightUnit * 100, (float) widthUnit * 56));
 
         canvas.add(new Paragraph("Währung\tBetrag").setBold().setFontSize(7).setPadding(0).setMargin(0).setFixedPosition((float) widthUnit * 85, (float) heightUnit * 30, (float) widthUnit * 52));
-        canvas.add(new Paragraph("CHF\t\t " + total).setFixedPosition((float) widthUnit * 85, (float) heightUnit * 25, (float) widthUnit * 52).setFontSize(8).setPaddingTop((float) heightUnit * 15).setMargin(0));
+        canvas.add(new Paragraph(String.format("CHF\t\t %.2f", total)).setFixedPosition((float) widthUnit * 85, (float) heightUnit * 25, (float) widthUnit * 52).setFontSize(8).setPaddingTop((float) heightUnit * 15).setMargin(0));
 
         if (offerRequest.getProjectInformation().getBankInformation().getAlternativeProcedure().length > 0) {
             int i = 13;
