@@ -17,5 +17,7 @@ public class CompanyRequest {
     private String phone;
     private String zip;
     private String city;
+    private String land;
     private String contactPerson;
+    private String account;
 }

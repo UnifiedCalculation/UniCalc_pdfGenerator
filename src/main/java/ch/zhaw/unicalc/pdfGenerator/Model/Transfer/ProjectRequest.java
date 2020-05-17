@@ -10,5 +10,5 @@ import lombok.Setter;
 public class ProjectRequest {
     private CustomerRequest customer;
     private CompanyRequest company;
-
+    private BankRequest bankInformation;
 }

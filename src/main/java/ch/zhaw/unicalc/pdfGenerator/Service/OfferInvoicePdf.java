@@ -25,7 +25,6 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * Generates an Offer-PDF or Invoice-PDF. Both contain the same information. Only the Title is different.
- *
  */
 @Service
 public class OfferInvoicePdf {
@@ -34,11 +33,13 @@ public class OfferInvoicePdf {
     private String[] header = {"Artikel", "Menge", "Einheit", "Preis/Einheit", "Rabatt", "Betrag"};
     private float[] width = {7, 2, 2, 3, 2, 3};
     private GeneralPdf generalPdf;
+    private InvoicePdf invoicePdf;
 
 
     @Autowired
-    public OfferInvoicePdf(GeneralPdf generalPdf) {
+    public OfferInvoicePdf(GeneralPdf generalPdf, InvoicePdf invoicePdf) {
         this.generalPdf = generalPdf;
+        this.invoicePdf = invoicePdf;
     }
 
     public byte[] generatePDF(boolean isOffer, OfferRequest offerRequest) {
@@ -63,11 +64,15 @@ public class OfferInvoicePdf {
             title.setPaddingBottom(0);
             createHeader(tableHeader);
             double total = createContent(table, offerRequest);
-            createTotal(table, total, offerRequest);
+            double finalTotal = createTotal(table, total, offerRequest);
 
             doc.add(title);
             doc.add(tableHeader);
             doc.add(table);
+
+            if (!isOffer) {
+                invoicePdf.generateInvoice(pdfDocument, offerRequest, finalTotal);
+            }
             doc.close();
 
 
@@ -94,7 +99,7 @@ public class OfferInvoicePdf {
                 .setPaddingBottom(0)
                 .setMarginBottom(0)
                 .setTextAlignment(TextAlignment.LEFT);
-        if(isOffer) {
+        if (isOffer) {
             titleName.add(new Paragraph("Angebot " + offerRequest.getTitle()));
         } else {
             titleName.add(new Paragraph("Rechnung " + offerRequest.getTitle()));
@@ -172,7 +177,7 @@ public class OfferInvoicePdf {
                         .setFontSize(9).setBorder(null);
                 Cell unitType = new Cell().add(new Paragraph(article.getUnit())).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setBorder(null);
-                Cell price = new Cell().add(new Paragraph(article.getPrice() + ".-")).setMargin(0).setPaddings(0, 0, 2, 0)
+                Cell price = new Cell().add(new Paragraph(String.format("%.2f.-", article.getPrice()))).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
                 Cell discount = new Cell().add(new Paragraph(article.getDiscount() + "%")).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
@@ -183,7 +188,7 @@ public class OfferInvoicePdf {
                 }
                 totald = Math.floor(totald * 100) / 100;
                 finalPrice += totald;
-                Cell total = new Cell().add(new Paragraph(totald + ".-")).setMargin(0).setPaddings(0, 0, 2, 0)
+                Cell total = new Cell().add(new Paragraph(String.format("%.2f.-", totald ))).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
 
 
@@ -205,7 +210,7 @@ public class OfferInvoicePdf {
 
     }
 
-    private void createTotal(Table table, double total, OfferRequest offerRequest) {
+    private double createTotal(Table table, double total, OfferRequest offerRequest) {
 
         Cell comment = new Cell(1, 3)
                 .add(new Paragraph("Zahlungsziel: (Platzhalter bspw. 30 Tage netto)"))
@@ -227,7 +232,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(totalString);
         Cell totalDouble = new Cell(1, 2)
-                .add(new Paragraph(Math.floor(total * 100) / 100 + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", (Math.floor(total * 100) / 100))))
                 .setFontSize(9)
                 .setBorderBottom(null)
                 .setBorderLeft(null)
@@ -257,7 +262,7 @@ public class OfferInvoicePdf {
         table.addCell(totalDiscount);
         Double toSubtract = Math.floor(total * offerRequest.getDiscount()) / 100;
         Cell totalDisountComputed = new Cell(1, 1)
-                .add(new Paragraph("-" + toSubtract + " CHF"))
+                .add(new Paragraph(String.format("-%.2f CHF", toSubtract)))
                 .setFontSize(9)
                 .setBorder(null)
                 .setPadding(0)
@@ -275,7 +280,7 @@ public class OfferInvoicePdf {
         table.addCell(nettoString);
         Double netto = total - toSubtract;
         Cell nettoDouble = new Cell(1, 2)
-                .add(new Paragraph(netto + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", netto)))
                 .setFontSize(9)
                 .setBorderLeft(null)
                 .setBorderBottom(null)
@@ -301,7 +306,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(mwstDisount);
         Cell mwstNumber = new Cell(1, 1)
-                .add(new Paragraph(Math.floor((netto + 0.077) * 100) / 100  + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", (Math.floor((netto * 0.077) * 100) / 100))))
                 .setFontSize(9)
                 .setBorder(null)
                 .setPadding(0)
@@ -316,14 +321,16 @@ public class OfferInvoicePdf {
                 .setPadding(0)
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(finalAmountString);
+        double finalTotal = Math.floor((netto * 1.077) * 100) / 100;
         Cell finalAmountNumber = new Cell(1, 2)
-                .add(new Paragraph(Math.floor((netto + 1.077) * 100) / 100  + " CHF"))
+                .add(new Paragraph(String.format("%.2f CHF", finalTotal)))
                 .setFontSize(9)
                 .setBorderLeft(null)
                 .setBorderRight(null)
                 .setPadding(0)
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(finalAmountNumber);
+        return finalTotal;
     }
 
 }
