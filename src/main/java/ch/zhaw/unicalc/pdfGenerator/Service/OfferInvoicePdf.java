@@ -179,7 +179,7 @@ public class OfferInvoicePdf {
                         .setFontSize(9).setBorder(null);
                 Cell price = new Cell().add(new Paragraph(String.format("%.2f.-", article.getPrice()))).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
-                Cell discount = new Cell().add(new Paragraph(String.format("%.2f%",article.getDiscount()))).setMargin(0).setPaddings(0, 0, 2, 0)
+                Cell discount = new Cell().add(new Paragraph(String.format("%.2f",article.getDiscount())+ "%")).setMargin(0).setPaddings(0, 0, 2, 0)
                         .setFontSize(9).setTextAlignment(TextAlignment.RIGHT).setBorder(null);
                 double totald = article.getPrice() * article.getAmount();
                 if (article.getDiscount() != 0) {
@@ -254,7 +254,7 @@ public class OfferInvoicePdf {
                 .setTextAlignment(TextAlignment.RIGHT);
         table.addCell(totalDiscountString);
         Cell totalDiscount = new Cell(1, 1)
-                .add(new Paragraph(String.format("- %.2f%", offerRequest.getDiscount())))
+                .add(new Paragraph(String.format("- %.2f", offerRequest.getDiscount()) + "%"))
                 .setFontSize(9)
                 .setPadding(0)
                 .setBorder(null)
