@@ -14,47 +14,57 @@ https://unicalc-pdfgenerator.herokuapp.com/swagger-ui.html
 
 ###### Both expect this JSON
 ```json
-{  
-  "discount": 0,  
-  "entries": [  
-    {  
-      "articles": [  
-        {  
-          "amount": 0,  
-          "description": "string",  
-          "discount": 0,  
-          "name": "string",  
-          "number": 0,  
-          "price": 0,  
-          "unit": "string"   
-        }  
-      ],   
-      "title": "string"  
-    }  
-  ],  
-  "projectInformation": {  
-    "company": {  
-      "address": "string",  
-      "city": "string",  
-      "contactPerson": "string",  
-      "logo": "string",  
-      "mail": "string",  
-      "name": "string",  
-      "phone": "string",  
-      "url": "string",  
-      "zip": "string"  
-    },  
-    "customer": {  
-      "address": "string",  
-      "city": "string",  
-      "companyName": "string",  
-      "department": "string",  
-      "land": "string",  
-      "name": "string",  
-      "zip": "string"  
-    }  
-  },  
-  "title": "string"  
+{
+  "discount": 0,
+  "entries": [
+    {
+      "articles": [
+        {
+          "amount": 0,
+          "description": "string",
+          "discount": 0,
+          "name": "string",
+          "number": 0,
+          "price": 0,
+          "unit": "string"
+        }
+      ],
+      "title": "string"
+    }
+  ],
+  "projectInformation": {
+    "bankInformation": {
+      "additionalInformation": "string",
+      "alternativeProcedure": [
+        "string"
+      ],
+      "invoiceInformation": "string",
+      "paymentReference": "string"
+    },
+    "company": {
+      "account": "string",
+      "address": "string",
+      "city": "string",
+      "contactPerson": "string",
+      "land": "string",
+      "logo": "string",
+      "mail": "string",
+      "name": "string",
+      "phone": "string",
+      "url": "string",
+      "zip": "string"
+    },
+    "customer": {
+      "address": "string",
+      "city": "string",
+      "companyName": "string",
+      "department": "string",
+      "land": "string",
+      "name": "string",
+      "zip": "string"
+    }
+  },
+  "title": "string"
 }
 ```
   
