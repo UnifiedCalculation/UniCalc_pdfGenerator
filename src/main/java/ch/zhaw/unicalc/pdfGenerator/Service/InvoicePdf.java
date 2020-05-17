@@ -161,7 +161,7 @@ public class InvoicePdf {
         canvas.add(new Paragraph(offerRequest.getProjectInformation().getBankInformation().getPaymentReference()).setFixedPosition((float) widthUnit * 158, (float) heightUnit * 68, (float) widthUnit * 60).setFontSize(7).setPadding(0).setMargin(0));
 
         canvas.add(new Paragraph("Zusätzliche Informationen").setBold().setFixedPosition((float) widthUnit * 158, (float) heightUnit * 61, (float) widthUnit * 52).setFontSize(7).setPadding(0).setMargin(0));
-        canvas.add(new Paragraph(offerRequest.getProjectInformation().getBankInformation().getAdditionalInformation()).setFixedPosition((float) widthUnit * 158, (float) heightUnit * 56, (float) widthUnit * 60).setFontSize(7).setPadding(0).setMargin(0));
+        canvas.add(new Paragraph(offerRequest.getProjectInformation().getBankInformation().getAdditionalInformation()).setFixedPosition((float) widthUnit * 158, (float) heightUnit * 56, (float) widthUnit * 100).setFontSize(7).setPadding(0).setMargin(0));
 
         canvas.add(new Paragraph("Zahlbar durch").setBold().setFixedPosition((float) widthUnit * 158, (float) heightUnit * 45, (float) widthUnit * 52).setFontSize(7).setPadding(0).setMargin(0));
         canvas.add(new Paragraph(offerRequest.getProjectInformation().getCustomer().getCompanyName() + "\n" +
