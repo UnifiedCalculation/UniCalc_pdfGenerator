@@ -13,7 +13,7 @@ public class ArticleRequest {
     private Integer number;
     private String unit;
     private Integer amount;
-    private Integer discount;
+    private Double discount;
     private Double price;
     private String description;
 }

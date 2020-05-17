@@ -11,7 +11,7 @@ import java.util.Set;
 @Builder
 public class OfferRequest {
     private String title;
-    private Integer discount;
+    private Double discount;
     private Set<EntryRequest> entries;
     private ProjectRequest projectInformation;
 }
