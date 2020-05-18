@@ -19,7 +19,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 
 /**
- * Pdf Class to generate general Information that every Document needs. (example Header, footer, etc)
+ * Pdf Class to generate general Information that every Document needs. (example: Header, footer, etc)
  */
 @Service
 public class GeneralPdf {
@@ -108,8 +108,8 @@ public class GeneralPdf {
     /**
      * Converts Given InputStream (The PDF) into byte[]
      *
-     * @param stream
-     * @return
+     * @param stream The stream to the generated PDF
+     * @return to PDF-file converted into byte[]
      * @throws IOException
      */
     public byte[] convertPdfToByte(InputStream stream) throws IOException {

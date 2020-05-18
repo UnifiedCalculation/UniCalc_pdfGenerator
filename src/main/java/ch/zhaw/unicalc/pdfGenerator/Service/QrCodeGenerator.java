@@ -22,7 +22,9 @@ import java.util.Map;
 /**
  * Java-Class from paymentstandards.ch
  * https://www.paymentstandards.ch/dam/downloads/qrcodegenerator.java
- * Path where the Swiss-cross is had to be changed
+ * Changes:
+ * Path where the Swiss-cross is, had to be changed
+ * Payload is no more an hardcoded String, but is generated from outside and given as an Parameter
  */
 @Service
 public class QrCodeGenerator {

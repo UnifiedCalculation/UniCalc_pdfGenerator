@@ -27,7 +27,7 @@ public class PDFController {
     /**
      * Generates a PDF for the Invoice and returns it.
      *
-     * @param offerRequest Invoice is constructed the same way as offer
+     * @param offerRequest Invoice-JSON is constructed the same way as offer-JSON
      * @return The Invoice PDF in byte[]
      */
     @RequestMapping(value = pdfGenerator + "/invoice", method = RequestMethod.POST)

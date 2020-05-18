@@ -24,7 +24,8 @@ import java.time.format.DateTimeFormatter;
 
 
 /**
- * Generates an Offer-PDF or Invoice-PDF. Both contain the same information. Only the Title is different.
+ * Generates an Offer-PDF or Invoice-PDF. In comparison to the Offer, the Invoice has an extra page in which
+ * the Generate Invoice with QRCode is located.
  */
 @Service
 public class OfferInvoicePdf {
@@ -42,6 +43,12 @@ public class OfferInvoicePdf {
         this.invoicePdf = invoicePdf;
     }
 
+    /**
+     * Generates a PDF with the given Information
+     * @param isOffer           whether the method should generate an Offer-PDF (true) or Invoice-PDF (false)
+     * @param offerRequest      contains all Information needed for creating the PDF
+     * @return
+     */
     public byte[] generatePDF(boolean isOffer, OfferRequest offerRequest) {
         // --------------- Create PDF -----------------------------
         try {
@@ -90,70 +97,14 @@ public class OfferInvoicePdf {
         return null;
     }
 
-    private void createTitle(boolean isOffer, Table title, OfferRequest offerRequest) {
-        Cell titleName = new Cell(1, 1)
-                .setFontSize(10)
-                .setBold()
-                .setWidth(8)
-                .setBorder(null)
-                .setPaddingBottom(0)
-                .setMarginBottom(0)
-                .setTextAlignment(TextAlignment.LEFT);
-        if (isOffer) {
-            titleName.add(new Paragraph("Angebot " + offerRequest.getTitle()));
-        } else {
-            titleName.add(new Paragraph("Rechnung " + offerRequest.getTitle()));
-        }
-        title.addCell(titleName);
-        Cell date = new Cell(1, 1)
-                .add(new Paragraph(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))))
-                .setFontSize(10)
-                .setWidth(2)
-                .setBorder(null)
-                .setPaddingLeft(14)
-                .setTextAlignment(TextAlignment.LEFT);
-        title.addCell(date);
-        Cell subTitle = new Cell(1, 1)
-                .add(new Paragraph("???"))
-                .setFontSize(9)
-                .setBold()
-                .setWidth(8)
-                .setBorder(null)
-                .setPaddingTop(0)
-                .setMarginTop(0)
-                .setTextAlignment(TextAlignment.LEFT);
-        title.addCell(subTitle);
-        title.setPaddingBottom(0);
-        title.setMarginBottom(8);
-    }
-
-
     /**
-     * Creates Header for the Table
+     * Creates the Table-Content
+     * This contains a List of all given Articles with their Name, Price, Amount, Discount...
+     * The total of all Articles is calculated and returned.
      *
-     * @param table
-     */
-    private void createHeader(Table table) {
-        for (int i = 1; i < 7; i++) {
-            Cell cell = new Cell(1, 1)
-                    .add(new Paragraph(header[i - 1]))
-                    .setWidth(width[i - 1])
-                    .setFontSize(10)
-                    .setBorderTop(Border.NO_BORDER)
-                    .setBorderRight(Border.NO_BORDER)
-                    .setBorderLeft(Border.NO_BORDER)
-                    .setBold();
-            if (i == 2 || i >= 4) {
-                cell.setTextAlignment(TextAlignment.RIGHT);
-            }
-            table.addCell(cell);
-        }
-    }
-
-    /**
-     * Creates the content from the JSON
-     *
-     * @param table
+     * @param table             the Table to which the Content should be added.
+     * @param offerRequest      the Request with all needed Information
+     * @return                  the total when calculating all articles.
      */
     public Double createContent(Table table, OfferRequest offerRequest) {
         double finalPrice = 0.0;
@@ -208,6 +159,60 @@ public class OfferInvoicePdf {
         }
         return finalPrice;
 
+    }
+
+    private void createTitle(boolean isOffer, Table title, OfferRequest offerRequest) {
+        Cell titleName = new Cell(1, 1)
+                .setFontSize(10)
+                .setBold()
+                .setWidth(8)
+                .setBorder(null)
+                .setPaddingBottom(0)
+                .setMarginBottom(0)
+                .setTextAlignment(TextAlignment.LEFT);
+        if (isOffer) {
+            titleName.add(new Paragraph("Angebot " + offerRequest.getTitle()));
+        } else {
+            titleName.add(new Paragraph("Rechnung " + offerRequest.getTitle()));
+        }
+        title.addCell(titleName);
+        Cell date = new Cell(1, 1)
+                .add(new Paragraph(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"))))
+                .setFontSize(10)
+                .setWidth(2)
+                .setBorder(null)
+                .setPaddingLeft(14)
+                .setTextAlignment(TextAlignment.LEFT);
+        title.addCell(date);
+        Cell subTitle = new Cell(1, 1)
+                .add(new Paragraph("???"))
+                .setFontSize(9)
+                .setBold()
+                .setWidth(8)
+                .setBorder(null)
+                .setPaddingTop(0)
+                .setMarginTop(0)
+                .setTextAlignment(TextAlignment.LEFT);
+        title.addCell(subTitle);
+        title.setPaddingBottom(0);
+        title.setMarginBottom(8);
+    }
+
+    private void createHeader(Table table) {
+        for (int i = 1; i < 7; i++) {
+            Cell cell = new Cell(1, 1)
+                    .add(new Paragraph(header[i - 1]))
+                    .setWidth(width[i - 1])
+                    .setFontSize(10)
+                    .setBorderTop(Border.NO_BORDER)
+                    .setBorderRight(Border.NO_BORDER)
+                    .setBorderLeft(Border.NO_BORDER)
+                    .setBold();
+            if (i == 2 || i >= 4) {
+                cell.setTextAlignment(TextAlignment.RIGHT);
+            }
+            table.addCell(cell);
+        }
     }
 
     private double createTotal(Table table, double total, OfferRequest offerRequest) {

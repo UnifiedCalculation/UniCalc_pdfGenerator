@@ -35,6 +35,13 @@ public class InvoicePdf {
         this.qrCodeGenerator = qrCodeGenerator;
     }
 
+    /**
+     * Generates for the given already existing PDF a new Page and adds the Invoice to the bottom with the QRCode
+     *
+     * @param pdfDocument  The PDF Document to which the invoice should be added
+     * @param offerRequest The Request with all needed Info to generate the Invoice
+     * @param total        The Total that should be payed
+     */
     public void generateInvoice(PdfDocument pdfDocument, OfferRequest offerRequest, double total) {
         PdfPage page = pdfDocument.addNewPage();
         Rectangle rectangle = new Rectangle(0, 0, 594, (float) heightUnit * 110);
