@@ -155,7 +155,7 @@ public class OfferInvoicePdf {
      *
      * @param table
      */
-    private Double createContent(Table table, OfferRequest offerRequest) {
+    public Double createContent(Table table, OfferRequest offerRequest) {
         double finalPrice = 0.0;
         for (EntryRequest segment : offerRequest.getEntries()) {
             Cell segmentTitleCell = new Cell(1, 6)
