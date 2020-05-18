@@ -1,0 +1,62 @@
+{
+  "discount": 0,
+  "entries": [
+    {
+      "articles": [
+        {
+          "amount": 5,
+          "description": "2,5m schwarzes Koaxial-Kabel",
+          "discount": 5,
+          "name": "Koaxial Kabel XT",
+          "number": 120,
+          "price": 23.5,
+          "unit": "unit"
+        },
+        {
+          "amount": 2,
+          "description": "Verbindung zwischen Koaxial-Kabel und Ethernet-Kabel",
+          "discount": 0,
+          "name": "Koaxial Kabel XT",
+          "number": 310,
+          "price": 31.0,
+          "unit": "unit"
+        },
+        {
+          "amount": 2,
+          "description": "Um mehrere Ethernet Kabels anschliessen zu könne",
+          "discount": 0,
+          "name": "Router V3.4",
+          "number": 1120,
+          "price": 54,
+          "unit": "unit"
+        }
+      ],
+      "title": "Internet Anschluss"
+    }
+  ],
+  "projectInformation": {
+    "company": {
+      "account": "CH8889144617752599775",
+      "address": "Adliswilstrasse 123",
+      "city": "Zürich",
+      "contactPerson": "Marc Muster",
+      "land": "Schweiz",
+      "logo": "https://community.upc.ch/t5/image/serverpage/image-id/943i3E665BDBC8E5F07E?v=1.0",
+      "mail": "info-service@upc.com",
+      "name": "UPC Schweiz",
+      "phone": "+41 44 456 34 23",
+      "url": "https://www.upc.ch/en/",
+      "zip": "8000"
+    },
+    "customer": {
+      "address": "MariaStrasse 456",
+      "city": "Luzern",
+      "companyName": "GreenLight AG",
+      "department": "HR",
+      "land": "Schweiz",
+      "name": "Sonia Martinez",
+      "zip": "3490"
+    }
+  },
+  "title": "Internet Anbindung"
+}

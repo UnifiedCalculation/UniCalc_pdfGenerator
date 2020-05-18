@@ -36,7 +36,7 @@ public class GeneralPdf {
      * @param doc      The Document to which the Header should be added
      * @param business The BusinessRequest with all needed Information
      */
-    public void createHeader(Document doc, CompanyRequest business) {
+    public void createHeader(Document doc, CompanyRequest business) throws MalformedURLException {
         float[] widths = {6, 3};
         Table table = new Table(UnitValue.createPercentArray(widths)).useAllAvailableWidth();
         Cell headerLeft = new Cell(1, 1)
@@ -57,7 +57,7 @@ public class GeneralPdf {
                         .setBorder(null);
                 table.addCell(headerLogo);
             } catch (MalformedURLException e) {
-
+                throw new MalformedURLException(e.toString());
             }
         }
         table.setMarginBottom(50);

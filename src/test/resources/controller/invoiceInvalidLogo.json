@@ -1,0 +1,52 @@
+{
+  "discount": 0,
+  "entries": [
+    {
+      "articles": [
+        {
+          "amount": 5,
+          "description": "2,5m schwarzes Koaxial-Kabel",
+          "discount": 5,
+          "name": "Koaxial Kabel XT",
+          "number": 120,
+          "price": 23.5,
+          "unit": "unit"
+        }
+      ],
+      "title": "Internet Anschluss"
+    }
+  ],
+  "projectInformation": {
+    "bankInformation": {
+      "additionalInformation": "Instruction of 03.04.2019",
+      "alternativeProcedure": [
+        "Name AV1: UV;UltraPay005;12345"
+      ],
+      "invoiceInformation": "//S1/10/10201409/11/190512/20/1400.000-53/30/106017086/31/180508/32/7.7/40/2:10;0:30",
+      "paymentReference": "210000000003139471430009017"
+    },
+    "company": {
+      "account": "CH8889144617752599775",
+      "address": "Adliswilstrasse 123",
+      "city": "Zürich",
+      "contactPerson": "Marc Muster",
+      "land": "Schweiz",
+      "logo": " .png",
+      "mail": "info-service@upc.com",
+      "name": "UPC Schweiz",
+      "phone": "+41 44 456 34 23",
+      "url": "https://www.upc.ch/en/",
+      "zip": "8000"
+    },
+    "customer": {
+      "address": "MariaStrasse 456",
+      "city": "Luzern",
+      "companyName": "GreenLight AG",
+      "department": "HR",
+      "land": "Schweiz",
+      "name": "Sonia Martinez",
+      "zip": "3490"
+    }
+  },
+  "title": "Internet Anbindung"
+}
