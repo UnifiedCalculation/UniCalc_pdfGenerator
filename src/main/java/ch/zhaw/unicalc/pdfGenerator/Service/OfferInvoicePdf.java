@@ -184,16 +184,6 @@ public class OfferInvoicePdf {
                 .setPaddingLeft(14)
                 .setTextAlignment(TextAlignment.LEFT);
         title.addCell(date);
-        Cell subTitle = new Cell(1, 1)
-                .add(new Paragraph("???"))
-                .setFontSize(9)
-                .setBold()
-                .setWidth(8)
-                .setBorder(null)
-                .setPaddingTop(0)
-                .setMarginTop(0)
-                .setTextAlignment(TextAlignment.LEFT);
-        title.addCell(subTitle);
         title.setPaddingBottom(0);
         title.setMarginBottom(8);
     }
